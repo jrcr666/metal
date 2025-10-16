@@ -1,0 +1,265 @@
+.PlatenCutPress_Quantity {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+
+.PlatenCutPress_Weight {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+
+.PlatenCutPress_PalletBtn {
+  margin-top: 50px;
+  font-size: 30px;
+}
+
+.PlatenCutPress_Machine_NewPalet {
+  position: absolute;
+  /*bottom: 0px;
+    right: 10px;*/
+  top: 275px;
+  right: 10px;
+  height: 40px;
+}
+.PlatenCutPress_PaletRef {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+
+#PalletRef {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+.PlatenCutPressNB_PalletBtn {
+  margin-top: 50px;
+  font-size: 30px;
+}
+
+.PlatenCutPress_Machine {
+  float: left;
+  width: 100%;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-height: 220px;
+}
+
+.PlatenCutPress_MachineLeft {
+  position: absolute;
+  top: 0px;
+  width: 390px;
+  left: 0px;
+  bottom: 0px;
+  border-right: solid 1px #aaa;
+  background: #fff;
+}
+
+.PlatenCutPress_MachineLeft2 {
+  float: left;
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  border-right: solid 1px #aaa;
+  background: #fff;
+}
+
+.PlatenCutPress_MachineName {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+}
+
+.PlatenCutPress_Machine_NR {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+}
+
+.PlatenCutPress_Machine_Salida {
+  position: absolute;
+  top: 120px;
+  right: 10px;
+}
+
+.PlatenCutPress_Machine_NewBanqueta {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.PlatenCutPress_Machine_LibrePalet {
+  position: absolute;
+  right: 10px;
+  top: 60px;
+}
+
+.PlatenCutPress_Machine_BanquetasTable {
+  background: #ccc;
+}
+
+.PlatenCutPress_Machine_MaterialId {
+  display: none;
+}
+
+.PlatenCutPress_Machine_NrId {
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  font-size: 30px;
+  color: #337ab7;
+}
+
+.PlatenCutPress_Machine_OutputId {
+  position: absolute;
+  top: 120px;
+  left: 10px;
+  font-size: 30px;
+  color: #337ab7;
+}
+
+.PlatenCutPressMachine_OutContainer {
+  position: absolute;
+  top: 275px;
+  left: 10px;
+  font-size: 30px;
+  color: #b77a33;
+}
+
+.PlatenCutPress_Machine_OrderId {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.PlatenCutPress_Machine_OpenWork {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  width: 165px;
+}
+
+.PlatenCutPress_Machine_OpenWork2 {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  width: 165px;
+}
+
+.PlatenCutPress_MachineHeader {
+  position: absolute;
+  left: 390px;
+  top: 0px;
+  right: 0px;
+  height: 45px;
+  background: #333;
+  margin: 0px;
+  padding: 0px;
+  color: #fff;
+  padding-left: 10px;
+  font-size: 18px;
+  padding-top: 3px;
+}
+
+.PlatenCutPress_MachineHeader2 {
+  float: left;
+  position: relative;
+  width: 100%;
+  height: 45px;
+  background: #333;
+  margin: 0px;
+  padding: 0px;
+  color: #fff;
+  padding-left: 10px;
+  font-size: 18px;
+  padding-top: 3px;
+}
+
+.PlatenCutPress_MachineHead {
+  float: left;
+  height: 100%;
+  padding-top: 8px;
+  width: 120px;
+  overflow: hidden;
+}
+
+.PlatenCutPress_MachineHead2 {
+  float: left;
+  height: 100%;
+  padding-top: 8px;
+  width: 110px;
+  overflow: hidden;
+}
+
+.PlatenCutPress_Machine_Tabla {
+  float: right;
+  margin-top: 50px;
+  min-height: 180px;
+  padding-left: 400px;
+  width: 100%;
+  background: #f0f0f0;
+}
+
+.PlatenCutPress_Machine_Tabla2 {
+  float: right;
+  margin-top: 50px;
+  min-height: 130px;
+  padding-left: 0px;
+  width: 100%;
+}
+
+.PlatenCutPress_MachineRow {
+  float: left;
+  width: 100%;
+  position: relative;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height: 50px;
+}
+
+.PlatenCutPress_MachineRow-selected {
+  background: #337ab7;
+  color: #fff;
+}
+
+.PlatenCutPress_MachineColumn {
+  float: left;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 120px;
+  font-size: 25px;
+  position: relative;
+}
+
+.PlatenCutPress_Extra {
+  position: absolute;
+  right: 0px;
+  top: -8px;
+  font-size: 18px;
+}
+
+.PlatenCutPress_MachineColumn2 {
+  float: left;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 110px;
+}
+
+.PlatenCutPress_MachineRowButton {
+  position: absolute;
+  width: 150px;
+  right: 10px;
+  top: 3px;
+}
+
+.PlatenCutPressMachineRowButton2 {
+  position: absolute;
+  left: 720px;
+  right: 10px;
+  top: 0;
+}

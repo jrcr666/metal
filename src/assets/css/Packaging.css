@@ -1,0 +1,403 @@
+#PackagingBody {
+  float: left;
+  width: 100%;
+}
+
+.Packaging_Machine {
+  float: left;
+  width: 100%;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-height: 220px;
+}
+
+.Packaging_MachineLeft {
+  position: absolute;
+  top: 0px;
+  width: 25%;
+  left: 0px;
+  bottom: 0px;
+  border-right: solid 1px #aaa;
+  background: #fff;
+}
+
+.Packaging_MachineLeft2 {
+  float: left;
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  border-right: solid 1px #aaa;
+  background: #fff;
+}
+
+.Packaging_MachineName {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+}
+
+.Packaging_Machine_NR {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+}
+
+.Packaging_Machine_NewPallet {
+  position: absolute;
+  top: 60px;
+  right: 100px;
+}
+.Packaging_Machine_LibrePalet {
+  position: absolute;
+  right: 10px;
+  top: 60px;
+}
+
+.Packaging_Machine_PaletsTable {
+  background: #ccc;
+}
+
+.Packaging_Machine_MaterialId {
+  display: none;
+}
+
+.Packaging_Machine_NrId {
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  font-size: 30px;
+  color: #337ab7;
+}
+
+.Packaging_Machine_OutContainer {
+  position: absolute;
+  top: 110px;
+  left: 0px;
+  font-size: 30px;
+  color: #b77a33;
+  right: 0px;
+}
+
+.Packaging_Machine_OrderId {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.Packaging_Machine_OpenWork {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  width: 165px;
+}
+
+.Packaging_Machine_OpenWork2 {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  width: 165px;
+}
+
+.Packaging_MachineHeader {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  height: 45px;
+  background: #333;
+  margin: 0px;
+  padding: 0px;
+  color: #fff;
+  font-size: 18px;
+  padding-top: 3px;
+}
+
+.Packaging_MachineHeader2 {
+  float: left;
+  position: relative;
+  width: 100%;
+  height: 45px;
+  background: #333;
+  margin: 0px;
+  padding: 0px;
+  color: #fff;
+  padding-left: 10px;
+  font-size: 18px;
+  padding-top: 3px;
+}
+
+.Packaging_MachineHead {
+  float: left;
+  height: 100%;
+  padding-top: 8px;
+  width: 130px;
+  overflow: hidden;
+}
+
+.Packaging_MachineHead2 {
+  float: left;
+  height: 100%;
+  padding-top: 8px;
+  width: 110px;
+  overflow: hidden;
+}
+
+.Packaging_Machine_Tabla {
+  float: right;
+  min-height: 250px;
+  width: 75%;
+  padding-top: 50px;
+  background: #f0f0f0;
+  position: relative;
+}
+
+.Packaging_Machine_Tabla2 {
+  float: right;
+  margin-top: 50px;
+  min-height: 130px;
+  padding-left: 0px;
+  width: 100%;
+}
+
+.Packaging_MachineRow {
+  float: left;
+  width: 100%;
+  position: relative;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height: 50px;
+}
+
+.Packaging_MachineSubRow {
+  float: left;
+  width: 100%;
+}
+
+.Packaging_MachineRow-selected {
+  background: #337ab7;
+  color: #fff;
+}
+
+.Packaging_MachineColumn {
+  float: left;
+  padding-top: 6px;
+  padding-bottom: 2px;
+  width: 130px;
+  font-size: 23px;
+  position: relative;
+}
+
+.Packaging_Extra {
+  position: absolute;
+  right: 0px;
+  top: -8px;
+  font-size: 18px;
+}
+
+.Packaging_MachineColumn2 {
+  float: left;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 110px;
+}
+
+.Packaging_MachineRowButton {
+  position: absolute;
+  width: 250px;
+  right: 10px;
+  top: 5px;
+}
+.Packaging_MachineRowButton2 {
+  position: absolute;
+  left: 720px;
+  right: 10px;
+  top: 0;
+}
+
+.btn {
+  font-size: 20px;
+}
+
+#ScrollContainer {
+  background: #fff;
+}
+
+.btn-green {
+  color: #fff;
+  background-color: #33b77a;
+  border-color: #2ea46d;
+}
+
+.btn-green {
+  background-image: -webkit-linear-gradient(top, #33b77a 0, #26885a 100%);
+  background-image: -o-linear-gradient(top, #33b77a 0, #26885a 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#33b77a), to(#26885a));
+  background-image: linear-gradient(to bottom, #33b77a 0, #26885a 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff33b77a', endColorstr='#ff26885a', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  background-repeat: repeat-x;
+  border-color: #248055;
+  font-size: 20px;
+}
+
+.btn-gold {
+  color: #fff;
+  background-color: #b77a33;
+  border-color: #a46d2e;
+}
+
+.btn-gold {
+  background-image: -webkit-linear-gradient(top, #b77a33 0, #885a26 100%);
+  background-image: -o-linear-gradient(top, #b77a33 0, #885a26 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#b77a33), to(#885a26));
+  background-image: linear-gradient(to bottom, #b77a33 0, #885a26 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffb77a33', endColorstr='#ff885a26', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  background-repeat: repeat-x;
+  border-color: #805524;
+  font-size: 20px;
+}
+
+.Reposo {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 36px;
+}
+
+.Packaging_InPallets {
+  float: right;
+  width: 75%;
+  height: 120px;
+}
+
+.Packaging_InPallet {
+  float: left;
+  width: 50%;
+}
+
+.Packaging_InLabel {
+  width: 100%;
+  float: left;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #aaa;
+  position: relative;
+  text-align: left;
+  height: 35px;
+}
+
+.Packaging_PalletLine {
+  position: absolute;
+  bottom: 0px;
+  left: 10px;
+  right: 10px;
+  border-bottom: solid 1px #aaa;
+  height: 1px;
+}
+
+.Packaging_PalletsBody {
+  width: 100%;
+  float: left;
+  padding: 10px;
+}
+
+.Packaging_PalletLabel {
+  position: absolute;
+  right: 155px;
+  font-size: 35px;
+  top: -10px;
+  color: #000;
+}
+
+.Packaging_FreePallet {
+  position: absolute;
+  right: 10px;
+  top: -10px;
+}
+
+.Packaging_Orientation {
+  font-size: 18px;
+}
+.PK_Quantity {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+
+.PK_Weight {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+
+.PK_PalletBtn {
+  margin-top: 50px;
+  font-size: 30px;
+}
+.PK_PaletRef {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+#PK_PaletRef {
+  text-align: center !important;
+  font-size: 30px !important;
+  height: 60px !important;
+}
+.NB_PalletBtn {
+  margin-top: 50px;
+  font-size: 30px;
+}
+
+.Reception_Machine_PrintLabels {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.Reception_Machine_NewPackage {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+#SourceTypeId {
+  font-size: 18px !important;
+  margin-top: 60px;
+  height: 40px !important;
+}
+
+#ModelList {
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  background: #f0f0f0;
+}
+
+.ModelList_head {
+  float: left;
+  width: 100%;
+  height: 40px;
+  background: #333;
+  line-height: 40px;
+  color: #fff;
+  font-size: 24px;
+}
+
+.ModelList_row {
+  float: left;
+  width: 100%;
+  font-size: 23px;
+  height: 40px;
+  line-height: 40px;
+}

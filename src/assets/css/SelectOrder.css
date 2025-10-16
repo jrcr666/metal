@@ -1,0 +1,15 @@
+.SP_MachineName {
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(to bottom, #337ab7 0, #265a88 100%);
+  padding: 10px;
+  font-size: 20px;
+  color: #fff;
+}
+
+.SP_BottomBar {
+  position: absolute;
+  bottom: 0px;
+  height: 50px;
+  width: 100%;
+}

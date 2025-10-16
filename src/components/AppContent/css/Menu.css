@@ -1,0 +1,169 @@
+.Menu_Title {
+  float: left;
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 10px;
+  padding-left: 15px;
+  padding-top: 15px;
+}
+.Menu_OptionRow {
+  float: left;
+  width: 100%;
+  position: relative;
+  padding: 15px;
+}
+.Menu_OptionRow:hover {
+  background: #ff6600;
+}
+
+.Menu_OptionIcon {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  width: 35px;
+  height: 35px;
+}
+.Menu_OptionLabel {
+  color: #ff6600;
+  font-size: 20px;
+  margin-left: 50px;
+  text-align: left;
+  color: #fff;
+}
+
+.Option_Perfil {
+  background-image: url('../img/Menu_Perfil.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Menu_OptionRow:hover .Option_Perfil {
+  background-image: url('../img/Menu_Perfil_h.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Option_Notificaciones {
+  background-image: url('../img/Menu_Notificaciones.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Menu_OptionRow:hover .Option_Notificaciones {
+  background-image: url('../img/Menu_Notificaciones_H.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Option_Reclamos {
+  background-image: url('../img/Menu_Reclamos.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Menu_OptionRow:hover .Option_Reclamos {
+  background-image: url('../img/Menu_Reclamos_h.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Option_Soporte {
+  background-image: url('../img/Menu_Soporte.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Menu_OptionRow:hover .Option_Soporte {
+  background-image: url('../img/Menu_Soporte_h.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Option_Ayuda {
+  background-image: url('../img/Menu_Ayuda.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Menu_OptionRow:hover .Option_Ayuda {
+  background-image: url('../img/Menu_Ayuda_h.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Option_CerrarSesion {
+  background-image: url('../img/Menu_CerrarSesion.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.Menu_OptionRow:hover .Option_CerrarSesion {
+  background-image: url('../img/Menu_CerrarSesion_h.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.MenuItem {
+  float: left;
+  width: 100%;
+  position: relative;
+  padding-left: 7px;
+  font-size: 17px;
+  text-align: left;
+}
+
+.MenuItem_Title {
+  float: left;
+  width: 100%;
+  color: #fff;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  cursor: pointer;
+}
+
+.MenuItem_Title:hover {
+  background: #f60;
+}
+
+.MenuItem_Title:active {
+  background: #f60;
+}
+
+.MenuItem_Title-active {
+  background: #f60 !important;
+}
+
+.MenuItem_SubElements {
+  float: left;
+  width: 100%;
+  padding-left: 3px;
+  height: 1px;
+  display: none;
+}
+
+.MenuItem_Dot {
+  margin-left: 2px;
+  margin-right: 2px;
+  display: inline-block;
+  width: 7px;
+}
+
+#MenuButton {
+  display: none;
+}
+
+#RefreshButton {
+  display: none;
+}
+
+#BackButton {
+  display: none;
+}
+
+.MenuItem {
+  color: #fff;
+}
+.MenuItem-active {
+  background: #fff;
+  color: #000;
+}

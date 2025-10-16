@@ -1,0 +1,253 @@
+.PressBrake_Machine {
+  float: left;
+  width: 100%;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-height: 220px;
+}
+
+.PressBrake_MachineLeft {
+  position: absolute;
+  top: 0px;
+  width: 390px;
+  left: 0px;
+  bottom: 0px;
+  border-right: solid 1px #aaa;
+  background: #fff;
+  z-index: 1;
+}
+
+.PressBrake_MachineLeft2 {
+  float: left;
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  border-right: solid 1px #aaa;
+  background: #fff;
+}
+
+.PressBrake_MachineName {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+}
+
+.PressBrake_Machine_NR {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+}
+
+.PressBrake_Machine_NewPallet {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.PressBrake_Machine_LibrePalet {
+  position: absolute;
+  right: 10px;
+  top: 60px;
+}
+
+.PressBrake_Machine_PalletsTable {
+  background: #ccc;
+}
+
+.PressBrake_PalletLine {
+  position: absolute;
+  bottom: 0px;
+  left: 10px;
+  right: 10px;
+  border-bottom: solid 1px #aaa;
+  height: 1px;
+}
+
+.PressBrake_PalletsBody {
+  width: 100%;
+  float: left;
+  padding: 10px;
+}
+
+.PressBrake_PalletLabel {
+  position: absolute;
+  right: 195px;
+  font-size: 35px;
+  top: -10px;
+  color: #000;
+}
+
+.PressBrake_FreePallet {
+  position: absolute;
+  right: 10px;
+  top: -10px;
+}
+
+.PressBrake_Machine_MaterialId {
+  display: none;
+}
+
+.PressBrake_Machine_NrId {
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  font-size: 30px;
+  color: #337ab7;
+}
+
+.PressBrake_Machine_OutContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 30px;
+  color: #b77a33;
+}
+
+.PressBrake_Machine_OrderId {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.PressBrake_Machine_OpenWork {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  width: 165px;
+}
+
+.PressBrake_Machine_OpenWork2 {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  width: 165px;
+}
+
+.PressBrake_MachineHeader {
+  position: absolute;
+  left: 390px;
+  top: 0px;
+  right: 0px;
+  height: 45px;
+  background: #333;
+  margin: 0px;
+  padding: 0px;
+  color: #fff;
+  padding-left: 10px;
+  font-size: 18px;
+  padding-top: 3px;
+}
+
+.PressBrake_MachineHeader2 {
+  float: left;
+  position: relative;
+  width: 100%;
+  height: 45px;
+  background: #333;
+  margin: 0px;
+  padding: 0px;
+  color: #fff;
+  padding-left: 10px;
+  font-size: 18px;
+  padding-top: 3px;
+}
+
+.PressBrake_MachineHead {
+  float: left;
+  height: 100%;
+  padding-top: 8px;
+  width: 120px;
+  overflow: hidden;
+}
+
+.PressBrake_MachineHead2 {
+  float: left;
+  height: 100%;
+  padding-top: 8px;
+  width: 110px;
+  overflow: hidden;
+}
+
+.PressBrake_Machine_Tabla {
+  float: right;
+  margin-top: 50px;
+  min-height: 180px;
+  padding-left: 190px;
+  width: 100%;
+  background: #f0f0f0;
+  position: relative;
+}
+
+.PressBrake_Machine_Tabla2 {
+  float: right;
+  margin-top: 50px;
+  min-height: 130px;
+  padding-left: 0px;
+  width: 100%;
+}
+
+.PressBrake_MachineRow {
+  float: left;
+  width: 100%;
+  position: relative;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height: 50px;
+}
+
+.PressBrake_MachineRow-selected {
+  background: #337ab7;
+  color: #fff;
+}
+
+.PressBrake_MachineColumn {
+  float: left;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 120px;
+  font-size: 25px;
+  position: relative;
+}
+
+.PressBrake_Extra {
+  position: absolute;
+  right: 0px;
+  top: -8px;
+  font-size: 18px;
+}
+
+.PressBrake_MachineColumn2 {
+  float: left;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 110px;
+}
+
+.PressBrake_MachineRowButton {
+  position: absolute;
+  width: 150px;
+  right: 10px;
+  top: 3px;
+}
+.PressBrake_MachineRowButton2 {
+  position: absolute;
+  left: 720px;
+  right: 10px;
+  top: 0;
+}
+
+.PressBrake_Machine_Pause {
+  position: absolute;
+  top: 1px;
+  right: 175px;
+  width: 165px;
+}
+
+.PressBrake_Machine_NewBanquette {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}

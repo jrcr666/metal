@@ -1,0 +1,49 @@
+#ScrollContainer {
+  position: absolute;
+  top: 70px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  overflow: hidden;
+}
+#StationFrame {
+  float: left;
+  width: 100%;
+}
+
+.TopBar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 70px;
+  background: #333;
+}
+
+#StationName {
+  position: absolute;
+  top: 15px;
+  left: 80px;
+  font-size: 30px;
+  color: #fff;
+}
+
+#OperatorName {
+  /*	position: absolute; */
+  top: 15px;
+  right: 75px;
+  font-size: 30px;
+  color: #fff;
+  float: right;
+  margin-right: 15px;
+}
+
+.OperatorImg {
+  float: right;
+  display: inline-block;
+  height: 45px;
+}
+
+.btn-secondary {
+  background: #fff;
+}

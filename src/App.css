@@ -1,0 +1,198 @@
+.MainScreen_TopBar {
+  float: left;
+  width: 100%;
+  height: 56px;
+  color: #fff;
+  font-size: 25px;
+  font-weight: regular;
+  font-shadow: none;
+  position: relative;
+}
+
+.MainScreen_Refresh {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  height: 40px;
+}
+
+.MainScreen_Back {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  height: 40px;
+}
+
+.MainScreen_Menu {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  height: 54px;
+  width: 54px;
+  z-index: 99;
+}
+
+.MainScreen_MenuIcon {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  height: 54px;
+  width: 54px;
+}
+
+.MainScreen_Title {
+  width: 100%;
+  text-align: center;
+}
+
+.MainScreen_Help {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  height: 40px;
+}
+
+.MainScreen_Zone {
+  float: left;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.MainScreen_MainZone {
+}
+
+.MainScreen_CentralZone {
+  position: absolute;
+  top: 0px;
+  bottom: 170px;
+  left: 0px;
+  right: 0px;
+}
+
+.MainScreen_EditProfile {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #666;
+  font-size: 20px;
+}
+
+.MainScreen_PhotoZone {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -130px;
+  margin-left: -65px;
+  width: 130px;
+  height: 130px;
+  background: #bdc3c7;
+  -webkit-border-radius: 65px;
+  border-radius: 65px;
+  border: 7px solid #eff0f0;
+}
+
+.MainScreen_PhotoImg {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 116px;
+  height: 116px;
+  -webkit-border-radius: 73px;
+  border-radius: 73px;
+}
+
+.MainScreen_PhotoAdd {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -35px;
+  margin-left: -20px;
+  width: 40px;
+  height: 40px;
+  background: #ff6600;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  font-size: 50px;
+  color: #fff;
+  line-height: 30px;
+}
+
+.MainScreen_LabelName {
+  position: absolute;
+  bottom: 110px;
+  height: 30px;
+  left: 0px;
+  right: 0px;
+  text-align: center;
+  color: #999;
+  font-size: 30px;
+}
+
+.MainScreen_LabelCC {
+  position: absolute;
+  bottom: 80px;
+  height: 20px;
+  left: 0px;
+  right: 0px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff6600;
+}
+
+.MainScreen_Button {
+  position: absolute;
+  width: 49.7%;
+  bottom: 1px;
+  height: 70px;
+  background: #d7d7d7;
+  border-bottom: 1px solid #bdc3c7;
+}
+
+.MainScreen_Button img {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  height: 40px;
+}
+
+.MainScreen_Button span {
+  position: absolute;
+  top: 16px;
+  left: 60px;
+  color: #4c525c;
+  font-size: 25px;
+}
+
+.MainScreen_Buttons {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  bottom: 0px;
+  height: 70px;
+  background: #aaa;
+}
+
+.MainScreen_ButtonLeft {
+  left: 0px;
+}
+
+.MainScreen_ButtonRight {
+  right: 0px;
+}
+
+.MainScreen_BottomZone {
+  position: absolute;
+  bottom: 0px;
+  height: 170px;
+  left: 0px;
+  right: 0px;
+  background: #ff6600;
+  padding: 20px;
+}
+
+.MainScreen_BottomZone img {
+  margin: auto;
+  height: 130px;
+}

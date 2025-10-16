@@ -1,0 +1,37 @@
+#GenericModalContainer {
+  background: #fff;
+  border-radius: 15px;
+}
+
+#GenericModal_body {
+  text-align: center;
+}
+
+.GenericModal_Image {
+  margin: 15px;
+  margin-bottom: 5px;
+}
+.GenericModal_Title {
+  margin: 20px;
+  margin-bottom: 0px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.GenericModal_Description {
+  padding: 15px;
+  padding-top: 0px;
+  font-size: 20px;
+  color: #666;
+}
+
+.GenericModal_Button {
+  margin: 0px;
+  background-color: #ff6600;
+  color: #fff;
+  text-align: center;
+  height: 60px;
+  font-size: 24px;
+  padding: 17px;
+  font-weight: bold;
+}
