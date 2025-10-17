@@ -22,7 +22,7 @@ export const useSelectOrder = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text(); // legacy HTML
+      const data = await res.json();
       hideLoading();
       return data;
     } catch (err) {
@@ -55,9 +55,9 @@ export const useSelectOrder = () => {
       dataString
     );
     if (data) {
-      updateMachineZone(machineId, data);
       lockModal.current = false;
-      hideModal();
+
+      return data;
     }
   };
 

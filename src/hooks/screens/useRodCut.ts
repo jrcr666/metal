@@ -2,6 +2,16 @@ import { useState } from 'react';
 import { useMainFramework } from '../../hooks/useMainFramework';
 import { useUser } from '../../store/userStore';
 
+interface SaveLineParams {
+  machineId: string;
+  orderId: string | number;
+  lineId: string | number;
+  quantity: string | number;
+  extra: string | number;
+  dimension: string | number;
+  materialId: string | number;
+}
+
 export const useRodCut = () => {
   const { user } = useUser();
   const { showLoading, hideLoading, lockModal, hideModal } = useMainFramework();
@@ -9,11 +19,6 @@ export const useRodCut = () => {
   const [error, setError] = useState<string | null>(null);
 
   const baseUrl = `${user.Protocol}${user.Host}`;
-
-  const updateMachineZone = (machineId: string, html: string) => {
-    const zone = document.getElementById(`MachineZone_${machineId}`);
-    if (zone) zone.innerHTML = html;
-  };
 
   const assignNR = async (machineId: string, consignmentId: string) => {
     const dataString = `MachineId=${machineId}&ConsignmentId=${consignmentId}`;
@@ -25,11 +30,11 @@ export const useRodCut = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
-      updateMachineZone(machineId, data);
       lockModal.current = false;
-      hideModal();
+
+      return data;
     } catch (err) {
       hideLoading();
       setError('Error al asignar NR');
@@ -59,8 +64,7 @@ export const useRodCut = () => {
     }
   };
 
-  const newBanquette = async (machineId: string) => {
-    const banquetteRef = (document.getElementById('BanquetteRef') as HTMLInputElement)?.value || '';
+  const newBanquette = async (machineId: string, banquetteRef: string) => {
     const dataString = `MachineId=${machineId}&BanquetteRef=${banquetteRef}`;
     try {
       setLoading(true);
@@ -70,11 +74,10 @@ export const useRodCut = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
-      updateMachineZone(machineId, data);
-      lockModal.current = false;
-      hideModal();
+
+      return data;
     } catch (err) {
       hideLoading();
       setError('Error al crear banqueta');
@@ -84,16 +87,23 @@ export const useRodCut = () => {
     }
   };
 
-  const saveLine = async (machineId: string) => {
-    const getVal = (id: string) => (document.getElementById(id) as HTMLInputElement)?.value || '';
+  const saveLine = async ({
+    machineId,
+    orderId,
+    lineId,
+    quantity,
+    extra,
+    dimension,
+    materialId,
+  }: SaveLineParams) => {
     const dataString =
       `MachineId=${machineId}` +
-      `&OrderId=${getVal('CB_OrderId')}` +
-      `&LineId=${getVal('CB_LineId')}` +
-      `&Quantity=${getVal('CB_Quantity')}` +
-      `&Extra=${getVal('CB_Extra')}` +
-      `&Dimension=${getVal('CB_Dimension')}` +
-      `&MaterialId=${getVal('CB_MaterialId')}`;
+      `&OrderId=${orderId}` +
+      `&LineId=${lineId}` +
+      `&Quantity=${quantity}` +
+      `&Extra=${extra}` +
+      `&Dimension=${dimension}` +
+      `&MaterialId=${materialId}`;
 
     try {
       setLoading(true);
@@ -103,11 +113,10 @@ export const useRodCut = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
-      updateMachineZone(machineId, data);
       lockModal.current = false;
-      hideModal();
+      return data;
     } catch (err) {
       hideLoading();
       setError('Error al guardar línea');
@@ -197,9 +206,7 @@ export const useRodCut = () => {
     lockModal.current = false;
   };
 
-  const closeBanquettePrint = async (machineId: string) => {
-    const quantity = (document.getElementById('CB_Quantity') as HTMLInputElement)?.value || '';
-    const weight = (document.getElementById('CB_Weight') as HTMLInputElement)?.value || '';
+  const closeBanquettePrint = async (machineId: string, quantity: string, weight: string) => {
     const dataString = `MachineId=${machineId}&Quantity=${quantity}&Weight=${weight}`;
 
     try {
@@ -211,15 +218,11 @@ export const useRodCut = () => {
         body: dataString,
       });
       const data = await res.json();
-      hideLoading();
 
       if (data.ItsOk === 'Y') {
-        const q = document.getElementById('CB_Quantity') as HTMLInputElement;
-        const w = document.getElementById('CB_Weight') as HTMLInputElement;
-        if (q) q.readOnly = true;
-        if (w) w.readOnly = true;
-        document.getElementById('BanquetteBtnClose')?.removeAttribute('hidden');
-        updateMachineZone(machineId, data.Html);
+        hideLoading();
+
+        return data.Machine;
       }
     } catch (err) {
       hideLoading();
@@ -227,10 +230,9 @@ export const useRodCut = () => {
     }
   };
 
-  // ❌ Cerrar banqueta sin imprimir
   const closeBanquetteClose = () => {
     lockModal.current = false;
-    hideModal();
+    //hideModal();
   };
 
   return {

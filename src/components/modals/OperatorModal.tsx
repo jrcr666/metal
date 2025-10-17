@@ -61,11 +61,10 @@ export const OperatorModal: React.FC<OperatorModalProps> = ({ stationId, onClose
 
   // 👉 Cuando se introduce contraseña
   const handleCheckPassword = () => {
-    checkPwOperator(stationId, selectedOperator?.OperatorId, password);
+    if (selectedOperator) {
+      checkPwOperator(stationId, selectedOperator.OperatorId, password);
+    }
   };
-
-  console.log('selectedOperator', selectedOperator);
-  console.log('operators', operators);
 
   return (
     <div

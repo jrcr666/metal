@@ -1,5 +1,7 @@
-// store/appContext.tsx
-import { createContext, useContext, useState, ReactNode } from 'react';
+// store/appContext.ts
+import type { ReactNode } from 'react';
+import { useState } from 'react';
+import { AppContext } from './contexts';
 
 // Tipado de operadores
 export type Operator = {
@@ -19,14 +21,12 @@ export type Title = {
 };
 
 // Tipado del contexto
-type AppContextType = {
+export type AppContextType = {
   title: Title | null;
   setTitle: (title: Title) => void;
   showOperatorModal: boolean;
   setShowOperatorModal: (show: boolean) => void;
 };
-
-const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [title, setTitle] = useState<Title | null>(null);
@@ -37,11 +37,4 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AppContext.Provider>
   );
-};
-
-// Hook para usar el contexto
-export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (!context) throw new Error('useAppContext debe usarse dentro de AppProvider');
-  return context;
 };

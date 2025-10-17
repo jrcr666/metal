@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMainFramework } from '../../hooks/useMainFramework';
 import { useUser } from '../../store/userStore';
 import './StationsList.css';
-import { useAppContext } from '../../store/appStore';
+import { useAppContext } from '../../store/hooks/useAppStore';
 
 interface Station {
   StationId: number;

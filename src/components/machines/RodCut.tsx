@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useRodCut } from '../../hooks/screens/useRodCut';
-import { useMainFramework } from '../../hooks/useMainFramework';
+import { useSelectOrder } from '../../hooks/screens/useSelectOrder.js';
+import { AssignNRModal } from '../modals/AssignNRModal';
+import { CloseBanquetteModal } from '../modals/CloseBanquetteModal';
 import { CloseLineModal } from '../modals/CloseLine';
+import { EditLineModal } from '../modals/EditLineModal.js';
+import { NewBanquetteModal } from '../modals/NewBanquetteModal';
 import { WorkModal } from '../modals/WorkSelector';
 
-// 🔹 Tipos
+// ------------------ Tipos ------------------
 type Material = {
   Name: string;
 };
@@ -45,92 +49,85 @@ type RodCutProps = {
   setMachines: React.Dispatch<React.SetStateAction<MachineBody[]>>;
   stationId: string;
 };
-export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
-  const { loadModal } = useMainFramework();
-  const { pauseMachine, resumeMachine } = useRodCut();
-  const [machineIdSelected, setMachineIdSelected] = useState('');
-  const [, setLineSelected] = useState('');
-  const [showWorkModal, setShowWorkModal] = useState(false);
-  const [showCloseLineModal, setShowCloseLineModal] = useState(false);
 
+// ------------------ Componente principal ------------------
+export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
+  const { pauseMachine, resumeMachine } = useRodCut();
+  const { selectOrderLine } = useSelectOrder();
+
+  const [machineIdSelected, setMachineIdSelected] = useState('');
+  const [lineSelected, setLineSelected] = useState('');
+  const [banquetteRef, setBanquetteRef] = useState('');
+
+  // Estado de modales
+  const [modalType, setModalType] = useState<
+    'work' | 'closeLine' | 'closeBanquette' | 'newBanquette' | 'assignNR' | 'editLine' | null
+  >(null);
+
+  // ------------------ Helpers ------------------
   const setMachinesHandler = (machineId: string, data: MachineBody) => {
     setMachines(prev =>
       prev.map(m =>
-        m.Machine.MachineId === machineId
-          ? {
-              ...m,
-              Machine: { ...data.Machine },
-              NrAlert: data.NrAlert,
-              Finished: data.Finished,
-              ClientMaterial: data.ClientMaterial,
-            }
-          : m
+        m.Machine.MachineId === machineId ? { ...m, ...data, Machine: { ...data.Machine } } : m
       )
     );
   };
 
-  const handleAssignNR = (machineId: string) =>
-    loadModal('GenericModal', `/app/AssignNR/${machineId}`);
+  // ------------------ Acciones ------------------
+  const handleAssignNR = (machineId: string) => {
+    setMachineIdSelected(machineId);
+    setModalType('assignNR');
+  };
 
-  const handleNewBanquette = (machineId: string) =>
-    loadModal('GenericModal', `/app/RodCut/NewBanquette/${machineId}`);
+  const handleNewBanquette = (machineId: string) => {
+    setMachineIdSelected(machineId);
+    setModalType('newBanquette');
+  };
 
-  const handleCloseBanquette = (machineId: string, outContainer: string) =>
-    loadModal('GenericModal', `/app/RodCut/CloseBanquette/${machineId}/${outContainer}`);
+  const handleCloseBanquette = (machineId: string, banquette: string) => {
+    setMachineIdSelected(machineId);
+    setBanquetteRef(banquette);
+    setModalType('closeBanquette');
+  };
 
   const handlePause = async (machineId: string) => {
-    console.log(`PauseMachine('${machineId}')`);
     const data = await pauseMachine(machineId);
-
     setMachinesHandler(machineId, data);
   };
 
   const handleResume = async (machineId: string) => {
-    console.log(`ResumeMachine('${machineId}')`);
     const data = await resumeMachine(machineId);
-
-    setMachines(prev =>
-      prev.map(m =>
-        m.Machine.MachineId === machineId
-          ? {
-              ...m,
-              Machine: { ...data.Machine },
-              NrAlert: data.NrAlert,
-              Finished: data.Finished,
-              ClientMaterial: data.ClientMaterial,
-            }
-          : m
-      )
-    );
+    setMachinesHandler(machineId, data);
   };
 
-  /*************  ✨ Windsurf Command ⭐  *************/
-  /**
-   * Abre la ventana de seleccion de trabajo para la maquina
-   * con el id especificado.
-   *
-   * @param {string} machineId - El id de la maquina
-   */
-  /*******  6648fe44-f076-405d-aefc-78f3b2ab283a  *******/
   const handleOpenWork = (machineId: string) => {
     setMachineIdSelected(machineId);
-    setShowWorkModal(true);
-    // loadModal('GenericModal', `/app/SelectOrder/${machineId}`); // TEST DE HTML
+    setModalType('work');
   };
 
-  const handleSelectLine = (machineId: string, rodCutLineId: string) => {
-    console.log(`SelectOrder_selectLine('${machineId}', '${rodCutLineId}')`);
+  const handleSelectLine = async (
+    machineId: string,
+    rodCutLineId: string,
+    rodCutOLineId: string
+  ) => {
+    const data = await selectOrderLine(machineId, rodCutLineId, rodCutOLineId);
+    setMachinesHandler(machineId, data);
   };
+
   const handleEditLine = (machineId: string, rodCutLineId: string) => {
-    loadModal('GenericModal', `/app/EditLine/${machineId}/${rodCutLineId}`);
-  };
-  const handleCloseLine = (machineId: string, rodCutLineId: string) => {
-    //  loadModal('GenericModal', `/app/CloseLine/${machineId}/${rodCutLineId}`);
+    //loadModal('GenericModal', `/app/EditLine/${machineId}/${rodCutLineId}`);
     setMachineIdSelected(machineId);
     setLineSelected(rodCutLineId);
-    setShowCloseLineModal(true);
+    setModalType('editLine');
   };
 
+  const handleCloseLine = (machineId: string, rodCutLineId: string) => {
+    setMachineIdSelected(machineId);
+    setLineSelected(rodCutLineId);
+    setModalType('closeLine');
+  };
+
+  // ------------------ Render ------------------
   return (
     <div id="CorteBody" className="CorteBody">
       {machines.map(({ Machine, NrAlert, ClientMaterial, Finished }) => (
@@ -235,7 +232,8 @@ export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
                     className={`Corte_MachineRow ${isSelected ? 'Corte_MachineRow-selected' : ''}`}
                     style={!isAvailable ? { opacity: 0.3 } : undefined}
                     onClick={() =>
-                      isAvailable && handleSelectLine(Machine.MachineId, line.RodCutLineId)
+                      isAvailable &&
+                      handleSelectLine(Machine.MachineId, line.RodCutLineId, line.OLineId)
                     }
                     onDoubleClick={() => handleEditLine(Machine.MachineId, line.RodCutLineId)}
                   >
@@ -271,19 +269,55 @@ export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
         </div>
       ))}
 
-      {showWorkModal && (
+      {/* ------------------ MODALES ------------------ */}
+      {modalType === 'work' && (
         <WorkModal
           changeMachine={setMachinesHandler}
           deviceId={machineIdSelected}
-          onClose={() => setShowWorkModal(false)}
+          onClose={() => setModalType(null)}
         />
       )}
 
-      {showCloseLineModal && (
+      {modalType === 'closeLine' && (
         <CloseLineModal
           machineId={machineIdSelected}
           changeMachine={setMachinesHandler}
-          onClose={() => setShowCloseLineModal(false)}
+          onClose={() => setModalType(null)}
+        />
+      )}
+
+      {modalType === 'closeBanquette' && (
+        <CloseBanquetteModal
+          machineId={machineIdSelected}
+          banquetteRef={banquetteRef}
+          changeMachine={setMachinesHandler}
+          onClose={() => setModalType(null)}
+        />
+      )}
+
+      {modalType === 'newBanquette' && (
+        <NewBanquetteModal
+          machineId={machineIdSelected}
+          changeMachine={setMachinesHandler}
+          onClose={() => setModalType(null)}
+        />
+      )}
+
+      {/* 🔹 Ficticias (por ahora) */}
+      {modalType === 'assignNR' && (
+        <AssignNRModal
+          changeMachine={setMachinesHandler}
+          machineId={machineIdSelected}
+          onClose={() => setModalType(null)}
+        />
+      )}
+
+      {modalType === 'editLine' && (
+        <EditLineModal
+          changeMachine={setMachinesHandler}
+          lineSelected={lineSelected}
+          machineId={machineIdSelected}
+          onClose={() => setModalType(null)}
         />
       )}
     </div>

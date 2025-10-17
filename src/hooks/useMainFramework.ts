@@ -1,8 +1,8 @@
 import $ from 'jquery';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useUser } from '../store/userStore';
-import { useMainScreen } from './useMainScreen';
 import { useGenericModal } from './useGenericModal';
+import { useMainScreen } from './useMainScreen';
 
 export function useMainFramework() {
   const { user } = useUser();
@@ -44,6 +44,7 @@ export function useMainFramework() {
     changeBackground();
     start();
     $('#Name_Zone').html(`${user?.Name ?? ''} ${user?.Surname ?? ''}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const changeBackground = useCallback(() => {
@@ -216,14 +217,6 @@ export function useMainFramework() {
       console.log('[MainFramework] Sesión cerrada.');
     }
   }, [endMenu]);
-
-  // ----------------------
-  // Inicialización automática
-  // ----------------------
-
-  useEffect(() => {
-    init();
-  }, [init]);
 
   // ----------------------
   // API pública del hook

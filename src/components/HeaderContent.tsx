@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import Operator from '../assets/img/operator.png';
 import { IamDevice } from '../constants';
 import { useServerManager } from '../hooks/screens/useServerManager';
-import { useAppContext } from '../store/appStore';
+import { useAppContext } from '../store/hooks/useAppStore';
 
 const TAPHOLD_DURATION = 800;
 

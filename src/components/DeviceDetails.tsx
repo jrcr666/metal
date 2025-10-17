@@ -1,70 +1,38 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMainFramework } from '../hooks/useMainFramework';
-import { useAppContext } from '../store/appStore';
 import { useUser } from '../store/userStore';
 import { RodCut } from './machines/RodCut';
+import type { Machine, MachineBody } from '../types';
+import { useAppContext } from '../store/hooks/useAppStore';
 
-// 🔹 Tipos
-type Line = {
-  RodCutLineId: string;
-  OLineId: string;
-  Quantity: number;
-  QuantityAux?: number;
-  Left: number;
-  Dimension: string;
-  Material: { Name: string };
-  MaterialId: string;
-  Weight: number;
+type MachineData = {
+  Machine: Machine;
+  NrAlert: boolean;
+  ClientMaterial: 'Y' | 'N';
+  Finished: boolean;
 };
 
-interface Machine {
-  MachineId: string;
-  TypeId: string; // Tipo de máquina
-  Name: string;
-  NrId: string;
-  MaterialId: string;
-  OutContainer1: string;
-  StatusId: string;
-  LineId: string;
-  Lines: Line[];
-  Order?: { OrderRef: string };
-}
-
-interface MachineBody {
-  Machine: Machine;
-  NrAlert: boolean;
-  ClientMaterial: 'Y' | 'N';
-  Finished: boolean;
-}
-
-interface MachineData {
-  Machine: Machine;
-  NrAlert: boolean;
-  ClientMaterial: 'Y' | 'N';
-  Finished: boolean;
-}
-
-export interface Operator {
+export type Operator = {
   OperatorId: string;
   Alias: string;
   Name: string;
   Surname: string;
   Active: boolean;
-}
+};
 
-interface TitleData {
+type TitleData = {
   Text: string;
   Operators: Operator[];
   AssignOperator: boolean;
   ActiveOperator?: string;
   StationId: string;
-}
+};
 
-interface DeviceData {
+type DeviceData = {
   Main: { Body: MachineBody }[];
   Title: TitleData;
-}
+};
 
 export const DeviceDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

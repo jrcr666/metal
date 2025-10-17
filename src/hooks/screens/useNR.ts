@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useMainFramework } from '../useMainFramework';
 import { useUser } from '../../store/userStore';
+import { useMainFramework } from '../useMainFramework';
 
 export const useNR = () => {
   const [loading, setLoading] = useState(false);
@@ -32,16 +32,13 @@ export const useNR = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
 
       hideLoading();
       setLoading(false);
 
-      const machineZone = document.getElementById(`MachineZone_${machineId}`);
-      if (machineZone) machineZone.innerHTML = data;
-
       lockModal.current = false;
-      hideModal();
+      return data.Machine;
     } catch (err) {
       console.error('Error en selectNR:', err);
       setError('Error al seleccionar NR');
@@ -51,8 +48,7 @@ export const useNR = () => {
   };
 
   /** 🔹 Selección manual de NR */
-  const manualNRSelect = async (machineId: string) => {
-    const reference = (document.getElementById('ManualNR') as HTMLInputElement)?.value || '';
+  const manualNRSelect = async (machineId: string, reference: string) => {
     if (!reference.trim()) {
       alert('Introducir el número de registro');
       return;
@@ -75,8 +71,7 @@ export const useNR = () => {
       setLoading(false);
 
       if (data.ItsOK === 'Y') {
-        const modalZone = document.getElementById('ModalZone');
-        if (modalZone) modalZone.innerHTML = data.Html;
+        return data.Machine;
       }
     } catch (err) {
       console.error('Error en manualNRSelect:', err);

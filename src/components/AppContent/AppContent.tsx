@@ -8,7 +8,7 @@ import { StationsList } from '../../pages/StationsList/StationsList';
 import { useEffect } from 'react';
 import LoadingGif from '../../assets/img/loadingAnimation.gif';
 import MenuIcon from '../../assets/img/Menu.png';
-import { DeviceDetails } from '../DevideDetails';
+import { DeviceDetails } from '../DeviceDetails';
 import { HeaderContent } from '../HeaderContent';
 import './css/index.css';
 import './css/MainScreen.css';
@@ -16,14 +16,14 @@ import './css/Menu.css';
 import './css/StartSession.css';
 import './css/stations.css';
 import { OperatorModal } from '../modals/OperatorModal';
-import { useAppContext } from '../../store/appStore';
+import { useAppContext } from '../../store/hooks/useAppStore';
 
 const AppContent = () => {
   useDeviceEvents();
   useBackButton();
 
   const { startMenu } = useMenu();
-  const { endMenu, startFramework, endThird } = useMainFramework();
+  const { endMenu, startFramework, endThird, hideModal } = useMainFramework();
   const { title, showOperatorModal, setShowOperatorModal } = useAppContext();
 
   useEffect(() => {
@@ -50,7 +50,6 @@ const AppContent = () => {
 
         <div className="MAIN_Body" id="ScrollContainer">
           <div className="MAIN_Scroll" id="bodyFramework">
-            {/* Aquí se renderizan las rutas */}
             <Routes>
               <Route path="/" element={<StationsList />} />
               <Route path="/device/:id" element={<DeviceDetails />} />
@@ -59,7 +58,6 @@ const AppContent = () => {
           </div>
         </div>
 
-        {/* Resto del layout igual */}
         <div id="MENU_Frame" onClick={() => endMenu()}>
           <div className="MENU_TopBar" id="MENU_TopBar" onClick={() => endMenu()}>
             <div className="Menu_Title" id="Name_Zone" onClick={() => startFramework()}>
@@ -108,9 +106,9 @@ const AppContent = () => {
         </div>
 
         <div id="SplashZone" />
-        {/* <div id="ModalBack" onClick={() => hideModal()}>
+        <div id="ModalBack" onClick={() => hideModal()}>
           <div id="ModalZone" />
-        </div> */}
+        </div>
         <div id="LoadingWait">
           <div id="LoadingBody">
             <div id="LoadingWaitText">Por favor, espere...</div>

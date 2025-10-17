@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '../../store/userStore';
 import { useMainFramework } from '../../hooks/useMainFramework';
 import { useWorks } from '../../hooks/screens/useWorks';
+import type { Machine } from '../../types';
+import { Modal } from './Modal';
 
 // 🔹 Tipos
 interface Work {
@@ -12,15 +14,10 @@ interface Work {
   Status: string;
 }
 
-interface Machine {
-  MachineId: string;
-  Name: string;
-}
-
 interface WorkModalProps {
   deviceId: string;
   onClose?: () => void;
-  changeMachine: (machineId: string, data: any) => void;
+  changeMachine: (machineId: string, data: Machine) => void;
 }
 
 export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose, changeMachine }) => {
@@ -69,8 +66,6 @@ export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose, changeM
     //console.log(`SelectWork_select('${machine.MachineId}','${workId}')`);
     const data = await selectWork(machine.MachineId, workId);
 
-    console.log('data', data);
-
     changeMachine(machine.MachineId, data);
     onClose?.();
   };
@@ -84,114 +79,81 @@ export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose, changeM
   };
 
   return (
-    <div
-      id="ModalBack"
-      onClick={() => onClose?.()}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        paddingTop: 10,
-        zIndex: 1000,
-      }}
-    >
+    <Modal onClose={() => onClose?.()}>
+      <div className="SP_MachineName">Cargar un trabajo - {machine.Name} -</div>
+      {/* Tabla */}
       <div
-        id="ModalZone"
-        onClick={e => e.stopPropagation()}
-        style={{
-          top: 1,
-          marginTop: 0,
-          height: 385,
-          width: 640,
-          background: '#fff',
-          borderRadius: 8,
-          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+        className="GenericModalContainer"
+        id="GenericModalContainer"
+        style={{ height: 285, overflow: 'auto', marginTop: 10 }}
       >
-        {/* Título */}
-        <div className="SP_MachineName">Cargar un trabajo - {machine.Name} -</div>
-        {/* Tabla */}
-        <div
-          className="GenericModalContainer"
-          id="GenericModalContainer"
-          style={{ height: 285, overflow: 'auto', marginTop: 10 }}
-        >
-          <div className="col-md-12">
-            <table className="table">
-              <thead className="thead-inverse">
-                <tr className="text-center">
-                  <th className="col-md-3 text-center">Nº Trabajo</th>
-                  <th className="col-md-2 text-center">Fecha</th>
-                  <th className="col-md-4 text-center">Comentarios</th>
-                  <th className="col-md-3 text-center">Estado</th>
+        <div className="col-md-12">
+          <table className="table">
+            <thead className="thead-inverse">
+              <tr className="text-center">
+                <th className="col-md-3 text-center">Nº Trabajo</th>
+                <th className="col-md-2 text-center">Fecha</th>
+                <th className="col-md-4 text-center">Comentarios</th>
+                <th className="col-md-3 text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {works.map(work => (
+                <tr
+                  key={work.WRodCutId}
+                  onClick={() => handleSelectWork(work.WRodCutId)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <td style={{ lineHeight: '34px' }}>{work.OrderRef}</td>
+                  <td style={{ lineHeight: '34px' }}>{work.WorkDate}</td>
+                  <td style={{ lineHeight: '34px' }}>{work.Comments}</td>
+                  <td style={{ lineHeight: '34px' }}>{work.Status}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {works.map(work => (
-                  <tr
-                    key={work.WRodCutId}
-                    onClick={() => handleSelectWork(work.WRodCutId)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <td style={{ lineHeight: '34px' }}>{work.OrderRef}</td>
-                    <td style={{ lineHeight: '34px' }}>{work.WorkDate}</td>
-                    <td style={{ lineHeight: '34px' }}>{work.Comments}</td>
-                    <td style={{ lineHeight: '34px' }}>{work.Status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {/* Barra inferior */}
-        <div
-          className="SP_BottomBar"
-          style={{
-            marginTop: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <button
-            type="button"
-            className="btn btn-primary"
-            style={{ float: 'left', marginLeft: 10 }}
-            onClick={() => handleSelectWork('_')}
-          >
-            Reposo
-          </button>
-
-          <input
-            className="form-control"
-            style={{ display: 'inline-block', width: 300, height: 40 }}
-            id="ManualWork"
-            name="ManualWork"
-            type="text"
-            placeholder="Introduce referencia"
-            value={manualRef}
-            onChange={e => setManualRef(e.target.value)}
-          />
-
-          <button
-            type="button"
-            className="btn btn-primary"
-            style={{ float: 'right', marginRight: 10 }}
-            onClick={handleManualWork}
-          >
-            Apertura Manual
-          </button>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
+      {/* Barra inferior */}
+      <div
+        className="SP_BottomBar"
+        style={{
+          marginTop: 10,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <button
+          type="button"
+          className="btn btn-primary"
+          style={{ float: 'left', marginLeft: 10 }}
+          onClick={() => handleSelectWork('_')}
+        >
+          Reposo
+        </button>
+
+        <input
+          className="form-control"
+          style={{ display: 'inline-block', width: 300, height: 40 }}
+          id="ManualWork"
+          name="ManualWork"
+          type="text"
+          placeholder="Introduce referencia"
+          value={manualRef}
+          onChange={e => setManualRef(e.target.value)}
+        />
+
+        <button
+          type="button"
+          className="btn btn-primary"
+          style={{ float: 'right', marginRight: 10 }}
+          onClick={handleManualWork}
+        >
+          Apertura Manual
+        </button>
+      </div>
+    </Modal>
   );
 };
 

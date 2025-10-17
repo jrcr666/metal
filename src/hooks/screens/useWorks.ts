@@ -84,8 +84,7 @@ export const useWorks = () => {
       const data = await res.json();
       hideLoading();
       if (data.ItsOK === 'Y') {
-        const modal = document.getElementById('ModalZone');
-        if (modal) modal.innerHTML = data.Html;
+        return data.Machine;
       }
     } catch (err) {
       hideLoading();
