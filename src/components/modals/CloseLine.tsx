@@ -1,17 +1,15 @@
+import { useRodCut } from '@hooks/screens/useRodCut';
+import { useMachinesStore } from '@store/machinesStore';
 import React, { useState } from 'react';
-import { useRodCut } from '../../hooks/screens/useRodCut';
 
 interface CloseLineModalProps {
   machineId: string;
   onClose?: () => void;
-  changeMachine: (machineId: string, data: any) => void;
 }
 
-export const CloseLineModal: React.FC<CloseLineModalProps> = ({
-  machineId,
-  onClose,
-  changeMachine,
-}) => {
+export const CloseLineModal: React.FC<CloseLineModalProps> = ({ machineId, onClose }) => {
+  const { updateMachine } = useMachinesStore();
+
   const { closeLinePrint, closeLineClose } = useRodCut();
   const [quantity, setQuantity] = useState('');
   const [weight, setWeight] = useState('');
@@ -19,10 +17,9 @@ export const CloseLineModal: React.FC<CloseLineModalProps> = ({
   const [disableInputs, setDisableInputs] = useState(false);
 
   const handlePrint = async () => {
-    console.log(`CloseLine_Print('${machineId}')`);
     const data = await closeLinePrint(machineId, quantity, weight);
 
-    changeMachine(machineId, data);
+    updateMachine(machineId, data);
 
     setShowCloseButton(true);
     setDisableInputs(true);

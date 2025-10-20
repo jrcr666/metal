@@ -1,17 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useMachinesStore } from '@store/machinesStore';
+import { useUserStore } from '@store/userStore';
+import React, { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMainFramework } from '../hooks/useMainFramework';
-import { useUser } from '../store/userStore';
-import { RodCut } from './machines/RodCut';
-import type { Machine, MachineBody } from '../types';
+import { RodCut } from '../screens/RodCut/RodCut';
 import { useAppContext } from '../store/hooks/useAppStore';
-
-type MachineData = {
-  Machine: Machine;
-  NrAlert: boolean;
-  ClientMaterial: 'Y' | 'N';
-  Finished: boolean;
-};
+import type { MachineBody } from '../types/machine.types';
 
 export type Operator = {
   OperatorId: string;
@@ -36,11 +30,10 @@ type DeviceData = {
 
 export const DeviceDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { setUser, user } = useUser();
+  const { setUser, user } = useUserStore();
   const { showLoading, hideLoading, loadModal } = useMainFramework();
   const { setTitle } = useAppContext();
-
-  const [machines, setMachines] = useState<MachineBody[]>([]);
+  const { machines, setMachines } = useMachinesStore();
 
   const openAdminAccess = () => {
     loadModal('GenericModal', '/app/AdminAccess');
@@ -82,23 +75,16 @@ export const DeviceDetails: React.FC = () => {
   }, [id]);
 
   // Convertimos MachineBody a MachineData para RodCut
-  const rodCutMachines: MachineData[] = machines.map(m => ({
-    Machine: m.Machine,
-    NrAlert: m.NrAlert,
-    ClientMaterial: m.ClientMaterial,
-    Finished: m.Finished,
-  }));
-
   const cmp = useMemo<React.ReactNode>(() => {
     if (machines.length === 0) return null;
     const typeId = machines[0]?.Machine?.TypeId;
 
     const components: Record<string, React.ReactElement> = {
-      RodCut: <RodCut stationId={id ?? ''} machines={rodCutMachines} setMachines={setMachines} />,
+      RodCut: <RodCut stationId={id ?? ''} />,
     };
 
     return components[typeId ?? ''] ?? null;
-  }, [machines, id, rodCutMachines, setMachines]);
+  }, [id, machines]);
 
   return <>{machines.length > 0 && cmp}</>;
 };

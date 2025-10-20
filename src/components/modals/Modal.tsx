@@ -1,5 +1,5 @@
-import React from 'react';
-import type { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   onClose?: () => void;
@@ -9,7 +9,7 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = ({ onClose, width = 500, height, children }) => {
-  return (
+  return createPortal(
     <div
       id="ModalBack"
       onClick={() => onClose?.()}
@@ -44,6 +44,7 @@ export const Modal: React.FC<ModalProps> = ({ onClose, width = 500, height, chil
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

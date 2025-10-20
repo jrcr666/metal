@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMainFramework } from '../../hooks/useMainFramework';
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 import './StationsList.css';
 import { useAppContext } from '../../store/hooks/useAppStore';
 
@@ -14,7 +14,7 @@ interface Station {
 export const StationsList: React.FC = () => {
   const navigate = useNavigate();
 
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { loadModal, showLoading, hideLoading } = useMainFramework();
   const [stations, setStations] = useState<Station[]>([]);
   const { setTitle } = useAppContext();

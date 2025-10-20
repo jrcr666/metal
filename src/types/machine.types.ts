@@ -1,3 +1,19 @@
+type Material = {
+  Name: string;
+};
+
+type Line = {
+  RodCutLineId: string;
+  OLineId: string;
+  Quantity: number;
+  QuantityAux?: number;
+  Left: number;
+  Dimension: string;
+  Material: Material;
+  MaterialId: string;
+  Weight: number;
+};
+
 export type Machine = {
   MachineId: string;
   TypeId: string; // Tipo de máquina

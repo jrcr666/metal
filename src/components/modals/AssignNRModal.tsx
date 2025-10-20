@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useUser } from '../../store/userStore';
-import { useMainFramework } from '../../hooks/useMainFramework';
-import { useRodCut } from '../../hooks/screens/useRodCut';
-import type { Machine } from '../../types';
-import { Modal } from './Modal';
+import { useRodCut } from '@hooks/screens/useRodCut';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNR } from '../../hooks/screens/useNR';
+import { useMainFramework } from '../../hooks/useMainFramework';
+import { useUserStore } from '../../store/userStore';
+import type { Machine } from '../../types/machine.types';
+import { Modal } from './Modal';
+import { useMachinesStore } from '@store/machinesStore';
 
 // 🔹 Tipos
 interface Consignment {
@@ -19,15 +20,12 @@ interface Consignment {
 interface AssignNRModalProps {
   machineId: string;
   onClose?: () => void;
-  changeMachine: (machineId: string, data: Machine) => void;
 }
 
-export const AssignNRModal: React.FC<AssignNRModalProps> = ({
-  machineId,
-  onClose,
-  changeMachine,
-}) => {
-  const { user } = useUser();
+export const AssignNRModal: React.FC<AssignNRModalProps> = ({ machineId, onClose }) => {
+  const { updateMachine } = useMachinesStore();
+
+  const { user } = useUserStore();
   const { showLoading, hideLoading } = useMainFramework();
   const { assignNR } = useRodCut();
   const { manualNRSelect } = useNR();
@@ -71,13 +69,13 @@ export const AssignNRModal: React.FC<AssignNRModalProps> = ({
 
   const handleSelectNR = async (consignmentId: string) => {
     const data = await assignNR(machine.MachineId, consignmentId);
-    changeMachine(machine.MachineId, data);
+    updateMachine(machine.MachineId, data);
     onClose?.();
   };
 
   const handleManualNR = async () => {
     const data = await manualNRSelect(machine.MachineId, manualNR || '_');
-    changeMachine(machine.MachineId, data);
+    updateMachine(machine.MachineId, data);
     onClose?.();
   };
 

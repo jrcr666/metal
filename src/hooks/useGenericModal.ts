@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { useUser } from '../store/userStore';
+import { useUserStore } from '../store/userStore';
 import mainFramework from '../legacy/MainFramework';
 import { useMainScreen } from '../hooks/useMainScreen';
 
@@ -8,7 +8,7 @@ export function useGenericModal() {
   // const currentAlias = useRef('');
   // const scroll = useRef<any>(0);
   const parametro1 = useRef('');
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { start } = useMainScreen();
 
   // 👉 Inicia el modal

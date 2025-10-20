@@ -2,29 +2,36 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import { useBackButton } from '../../hooks/useBackButton';
 import { useDeviceEvents } from '../../hooks/useDeviceEvents';
 import { useMainFramework } from '../../hooks/useMainFramework';
-import { useMenu } from '../../hooks/useMenu';
-import { StationsList } from '../../pages/StationsList/StationsList';
+import { StationsList } from '../../screens/StationsList/StationsList';
 
-import { useEffect } from 'react';
+import { SidebarMenu } from '@components/Sidebar';
+import { useMenu } from '@hooks/useMenu';
+import { useEffect, useState } from 'react';
 import LoadingGif from '../../assets/img/loadingAnimation.gif';
 import MenuIcon from '../../assets/img/Menu.png';
+import { useAppContext } from '../../store/hooks/useAppStore';
 import { DeviceDetails } from '../DeviceDetails';
 import { HeaderContent } from '../HeaderContent';
+import { OperatorModal } from '../modals/OperatorModal';
 import './css/index.css';
 import './css/MainScreen.css';
 import './css/Menu.css';
 import './css/StartSession.css';
 import './css/stations.css';
-import { OperatorModal } from '../modals/OperatorModal';
-import { useAppContext } from '../../store/hooks/useAppStore';
 
 const AppContent = () => {
   useDeviceEvents();
   useBackButton();
 
-  const { startMenu } = useMenu();
-  const { endMenu, startFramework, endThird, hideModal } = useMainFramework();
+  const { start, packages, title: menuTitle } = useMenu();
+  const { startFramework, endThird, hideModal } = useMainFramework();
   const { title, showOperatorModal, setShowOperatorModal } = useAppContext();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleOpenMenu = async () => {
+    setMenuOpen(true);
+    await start();
+  };
 
   useEffect(() => {
     startFramework();
@@ -44,7 +51,7 @@ const AppContent = () => {
           className="MainScreen_Menu"
           id="MenuButton"
           src={MenuIcon}
-          onClick={() => startMenu()}
+          onClick={() => handleOpenMenu()}
           alt="Menu"
         />
 
@@ -58,7 +65,7 @@ const AppContent = () => {
           </div>
         </div>
 
-        <div id="MENU_Frame" onClick={() => endMenu()}>
+        {/* <div id="MENU_Frame" onClick={() => endMenu()}>
           <div className="MENU_TopBar" id="MENU_TopBar" onClick={() => endMenu()}>
             <div className="Menu_Title" id="Name_Zone" onClick={() => startFramework()}>
               Menú
@@ -68,7 +75,16 @@ const AppContent = () => {
           <div className="MENU_Body" id="MENU_ScrollContainer">
             <div className="MENU_Scroll" id="MENU_bodyFramework" />
           </div>
-        </div>
+        </div> */}
+
+        {/* Sidebar */}
+        <SidebarMenu
+          title={menuTitle}
+          isOpen={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onStartFramework={startFramework}
+          packages={packages}
+        />
 
         <div id="THIRD_Frame">
           <div className="THIRD_TopBar" id="THIRD_TopBar">

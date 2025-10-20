@@ -1,19 +1,16 @@
+import { useRodCut } from '@hooks/screens/useRodCut';
+import { useMachinesStore } from '@store/machinesStore';
 import React, { useState } from 'react';
-import { useRodCut } from '../../hooks/screens/useRodCut';
-import type { Machine } from '../../types';
 
 interface CloseBanquetteModalProps {
   machineId: string;
   banquetteRef?: string;
   onClose?: () => void;
-  changeMachine: (machineId: string, data: Machine) => void;
 }
 
-export const CloseBanquetteModal: React.FC<CloseBanquetteModalProps> = ({
-  machineId,
-  onClose,
-  changeMachine,
-}) => {
+export const CloseBanquetteModal: React.FC<CloseBanquetteModalProps> = ({ machineId, onClose }) => {
+  const { updateMachine } = useMachinesStore();
+
   const { closeBanquettePrint, closeBanquetteClose } = useRodCut();
   const [quantity, setQuantity] = useState('');
   const [weight, setWeight] = useState('');
@@ -24,7 +21,7 @@ export const CloseBanquetteModal: React.FC<CloseBanquetteModalProps> = ({
     console.log(`CloseBanquette_Print('${machineId}')`);
     const data = await closeBanquettePrint(machineId, quantity, weight);
 
-    changeMachine(machineId, data);
+    updateMachine(machineId, data);
     setShowCloseButton(true);
     setDisableInputs(true);
   };

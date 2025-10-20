@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMainFramework } from '../../hooks/useMainFramework';
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 
 interface SaveLineParams {
   machineId: string;
@@ -13,7 +13,7 @@ interface SaveLineParams {
 }
 
 export const useRodCut = () => {
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { showLoading, hideLoading, lockModal, hideModal } = useMainFramework();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

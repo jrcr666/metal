@@ -1,8 +1,8 @@
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 import { useMainFramework } from '../useMainFramework';
 
 export const useWorks = () => {
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { showLoading, hideLoading, lockModal, hideModal } = useMainFramework();
 
   const baseUrl = `${user.Protocol}${user.Host}`;
@@ -33,7 +33,6 @@ export const useWorks = () => {
       const data = await res.json();
       hideLoading();
       lockModal.current = false;
-      hideModal();
 
       return data;
     } catch (err) {
@@ -56,7 +55,7 @@ export const useWorks = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
       updateMachineZone(machineId, data);
       lockModal.current = false;
@@ -84,7 +83,7 @@ export const useWorks = () => {
       const data = await res.json();
       hideLoading();
       if (data.ItsOK === 'Y') {
-        return data.Machine;
+        return data;
       }
     } catch (err) {
       hideLoading();
@@ -92,14 +91,15 @@ export const useWorks = () => {
     }
   };
 
-  const manualWorkCreate = async (machineId: string, reference: string) => {
-    const form = document.getElementById('ManualWorkForm') as HTMLFormElement | null;
-    if (!form) return;
-
+  const manualWorkCreate = async (
+    machineId: string,
+    reference: string,
+    fields: Record<string, string>
+  ) => {
     let dataString = `MachineId=${machineId}&Reference=${reference}`;
-    Array.from(form.elements).forEach(el => {
-      const input = el as HTMLInputElement;
-      if (input.name) dataString += `&${input.name}=${encodeURIComponent(input.value)}`;
+
+    Object.entries(fields).forEach(([key, value]) => {
+      dataString += `&${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
     });
 
     showLoading();
@@ -109,14 +109,12 @@ export const useWorks = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
-      updateMachineZone(machineId, data);
-      lockModal.current = false;
-      hideModal();
+      return data;
     } catch (err) {
       hideLoading();
-      console.error(err);
+      console.error('Error en manualWorkCreate:', err);
     }
   };
 

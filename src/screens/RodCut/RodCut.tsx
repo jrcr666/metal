@@ -1,77 +1,33 @@
-import React, { useState } from 'react';
-import { useRodCut } from '../../hooks/screens/useRodCut';
-import { useSelectOrder } from '../../hooks/screens/useSelectOrder.js';
-import { AssignNRModal } from '../modals/AssignNRModal';
-import { CloseBanquetteModal } from '../modals/CloseBanquetteModal';
-import { CloseLineModal } from '../modals/CloseLine';
-import { EditLineModal } from '../modals/EditLineModal.js';
-import { NewBanquetteModal } from '../modals/NewBanquetteModal';
-import { WorkModal } from '../modals/WorkSelector';
-
-// ------------------ Tipos ------------------
-type Material = {
-  Name: string;
-};
-
-type Line = {
-  RodCutLineId: string;
-  OLineId: string;
-  Quantity: number;
-  QuantityAux?: number;
-  Left: number;
-  Dimension: string;
-  Material: Material;
-  MaterialId: string;
-  Weight: number;
-};
-
-type Machine = {
-  MachineId: string;
-  Name: string;
-  NrId: string;
-  MaterialId: string;
-  OutContainer1: string;
-  StatusId: string;
-  LineId: string;
-  Lines: Line[];
-  Order?: { OrderRef: string };
-};
-
-interface MachineBody {
-  Machine: Machine;
-  NrAlert: boolean;
-  ClientMaterial: 'Y' | 'N';
-  Finished: boolean;
-}
+import { AssignNRModal } from '@components/modals/AssignNRModal';
+import { CloseBanquetteModal } from '@components/modals/CloseBanquetteModal';
+import { CloseLineModal } from '@components/modals/CloseLine';
+import { EditLineModal } from '@components/modals/EditLineModal.js';
+import { NewBanquetteModal } from '@components/modals/NewBanquetteModal';
+import { WorkModal } from '@components/modals/WorkSelector';
+import { useRodCut } from '@hooks/screens/useRodCut';
+import { useSelectOrder } from '@hooks/screens/useSelectOrder.js';
+import { useMachinesStore } from '@store/machinesStore';
+import React, { useState, useRef } from 'react';
 
 type RodCutProps = {
-  machines: MachineBody[];
-  setMachines: React.Dispatch<React.SetStateAction<MachineBody[]>>;
   stationId: string;
 };
 
-// ------------------ Componente principal ------------------
-export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
+export const RodCut: React.FC<RodCutProps> = () => {
   const { pauseMachine, resumeMachine } = useRodCut();
   const { selectOrderLine } = useSelectOrder();
+  const { machines, updateMachine } = useMachinesStore();
 
   const [machineIdSelected, setMachineIdSelected] = useState('');
   const [lineSelected, setLineSelected] = useState('');
   const [banquetteRef, setBanquetteRef] = useState('');
 
-  // Estado de modales
   const [modalType, setModalType] = useState<
     'work' | 'closeLine' | 'closeBanquette' | 'newBanquette' | 'assignNR' | 'editLine' | null
   >(null);
 
-  // ------------------ Helpers ------------------
-  const setMachinesHandler = (machineId: string, data: MachineBody) => {
-    setMachines(prev =>
-      prev.map(m =>
-        m.Machine.MachineId === machineId ? { ...m, ...data, Machine: { ...data.Machine } } : m
-      )
-    );
-  };
+  // Ref para detectar doble toque en pantallas táctiles
+  const lastTapRef = useRef<number | null>(null);
 
   // ------------------ Acciones ------------------
   const handleAssignNR = (machineId: string) => {
@@ -92,12 +48,12 @@ export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
 
   const handlePause = async (machineId: string) => {
     const data = await pauseMachine(machineId);
-    setMachinesHandler(machineId, data);
+    updateMachine(machineId, data);
   };
 
   const handleResume = async (machineId: string) => {
     const data = await resumeMachine(machineId);
-    setMachinesHandler(machineId, data);
+    updateMachine(machineId, data);
   };
 
   const handleOpenWork = (machineId: string) => {
@@ -111,11 +67,10 @@ export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
     rodCutOLineId: string
   ) => {
     const data = await selectOrderLine(machineId, rodCutLineId, rodCutOLineId);
-    setMachinesHandler(machineId, data);
+    updateMachine(machineId, data);
   };
 
   const handleEditLine = (machineId: string, rodCutLineId: string) => {
-    //loadModal('GenericModal', `/app/EditLine/${machineId}/${rodCutLineId}`);
     setMachineIdSelected(machineId);
     setLineSelected(rodCutLineId);
     setModalType('editLine');
@@ -125,6 +80,16 @@ export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
     setMachineIdSelected(machineId);
     setLineSelected(rodCutLineId);
     setModalType('closeLine');
+  };
+
+  // 🔹 Detección de doble toque (tablet/móvil)
+  const handleTouchEdit = (machineId: string, rodCutLineId: string) => {
+    const now = Date.now();
+    if (lastTapRef.current && now - lastTapRef.current < 300) {
+      // Segundo toque rápido → doble toque
+      handleEditLine(machineId, rodCutLineId);
+    }
+    lastTapRef.current = now;
   };
 
   // ------------------ Render ------------------
@@ -236,6 +201,7 @@ export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
                       handleSelectLine(Machine.MachineId, line.RodCutLineId, line.OLineId)
                     }
                     onDoubleClick={() => handleEditLine(Machine.MachineId, line.RodCutLineId)}
+                    onTouchEnd={() => handleTouchEdit(Machine.MachineId, line.RodCutLineId)}
                   >
                     <div className="Corte_MachineColumn">
                       {line.Quantity}
@@ -271,50 +237,26 @@ export const RodCut: React.FC<RodCutProps> = ({ machines, setMachines }) => {
 
       {/* ------------------ MODALES ------------------ */}
       {modalType === 'work' && (
-        <WorkModal
-          changeMachine={setMachinesHandler}
-          deviceId={machineIdSelected}
-          onClose={() => setModalType(null)}
-        />
+        <WorkModal deviceId={machineIdSelected} onClose={() => setModalType(null)} />
       )}
-
       {modalType === 'closeLine' && (
-        <CloseLineModal
-          machineId={machineIdSelected}
-          changeMachine={setMachinesHandler}
-          onClose={() => setModalType(null)}
-        />
+        <CloseLineModal machineId={machineIdSelected} onClose={() => setModalType(null)} />
       )}
-
       {modalType === 'closeBanquette' && (
         <CloseBanquetteModal
           machineId={machineIdSelected}
           banquetteRef={banquetteRef}
-          changeMachine={setMachinesHandler}
           onClose={() => setModalType(null)}
         />
       )}
-
       {modalType === 'newBanquette' && (
-        <NewBanquetteModal
-          machineId={machineIdSelected}
-          changeMachine={setMachinesHandler}
-          onClose={() => setModalType(null)}
-        />
+        <NewBanquetteModal machineId={machineIdSelected} onClose={() => setModalType(null)} />
       )}
-
-      {/* 🔹 Ficticias (por ahora) */}
       {modalType === 'assignNR' && (
-        <AssignNRModal
-          changeMachine={setMachinesHandler}
-          machineId={machineIdSelected}
-          onClose={() => setModalType(null)}
-        />
+        <AssignNRModal machineId={machineIdSelected} onClose={() => setModalType(null)} />
       )}
-
       {modalType === 'editLine' && (
         <EditLineModal
-          changeMachine={setMachinesHandler}
           lineSelected={lineSelected}
           machineId={machineIdSelected}
           onClose={() => setModalType(null)}

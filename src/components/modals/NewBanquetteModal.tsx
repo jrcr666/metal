@@ -1,26 +1,22 @@
+import { useRodCut } from '@hooks/screens/useRodCut';
+import { useMachinesStore } from '@store/machinesStore';
 import React, { useState } from 'react';
-import { useRodCut } from '../../hooks/screens/useRodCut';
 import { Modal } from './Modal';
-import type { Machine } from '../../types';
 
 interface NewBanquetteModalProps {
   machineId: string;
   onClose?: () => void;
-  changeMachine: (machineId: string, data: Machine) => void;
 }
 
-export const NewBanquetteModal: React.FC<NewBanquetteModalProps> = ({
-  machineId,
-  onClose,
-  changeMachine,
-}) => {
+export const NewBanquetteModal: React.FC<NewBanquetteModalProps> = ({ machineId, onClose }) => {
+  const { updateMachine } = useMachinesStore();
+
   const { newBanquette } = useRodCut();
   const [banquetteRef, setBanquetteRef] = useState('');
 
   const handleAssign = async () => {
-    console.log(`NewBanquette_select('${machineId}')`);
-    const data: Machine = await newBanquette(machineId, banquetteRef);
-    changeMachine(machineId, data);
+    const data = await newBanquette(machineId, banquetteRef);
+    updateMachine(machineId, data);
     onClose?.();
   };
 

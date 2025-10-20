@@ -1,9 +1,9 @@
+import { useMachinesStore } from '@store/machinesStore';
 import React, { useEffect, useState } from 'react';
-import { useMainFramework } from '../../hooks/useMainFramework';
-import { useUser } from '../../store/userStore';
-import type { Machine } from '../../types';
-import { Modal } from './Modal';
 import { useRodCut } from '../../hooks/screens/useRodCut';
+import { useMainFramework } from '../../hooks/useMainFramework';
+import { useUserStore } from '../../store/userStore';
+import { Modal } from './Modal';
 
 // Tipos de la línea y materiales
 interface Material {
@@ -34,18 +34,18 @@ type EditLineModalProps = {
   machineId: string;
   lineSelected: string;
   onClose?: () => void;
-  changeMachine: (machineId: string, data: Machine) => void;
 };
 
 export const EditLineModal: React.FC<EditLineModalProps> = ({
   machineId,
   onClose,
-  changeMachine,
   lineSelected,
 }) => {
+  const { updateMachine } = useMachinesStore();
+
   const { showLoading, hideLoading } = useMainFramework();
   const { saveLine } = useRodCut();
-  const { user } = useUser();
+  const { user } = useUserStore();
 
   const [line, setLine] = useState<Line | null>(null);
   const [title, setTitle] = useState<string>('');
@@ -93,7 +93,7 @@ export const EditLineModal: React.FC<EditLineModalProps> = ({
       materialId: line.MaterialId,
     } as SaveLineParams);
 
-    changeMachine(machineId, data);
+    updateMachine(machineId, data);
     onClose?.();
   };
 

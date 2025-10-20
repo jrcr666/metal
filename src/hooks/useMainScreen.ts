@@ -2,10 +2,10 @@
 import { useCallback } from 'react';
 import $ from 'jquery';
 import mainFramework, { ShowLoading } from '../legacy/MainFramework';
-import { useUser } from '../store/userStore'; // tu hook para userManager
+import { useUserStore } from '../store/userStore'; // tu hook para userManager
 
 export const useMainScreen = () => {
-  const { user } = useUser(); // accede al userManager desde el store
+  const { user } = useUserStore(); // accede al userManager desde el store
 
   // Inicia el mainScreen
   const start = useCallback(() => {
@@ -20,42 +20,6 @@ export const useMainScreen = () => {
     waitingProcess.resolve();
     return waitingProcess.promise();
   }, []);
-
-  // Carga el menú desde el backend
-  const loadMenu = useCallback(() => {
-    const waitingProcess = $.Deferred();
-    ShowLoading();
-
-    const deviceId = user.DeviceId;
-
-    const dataString = 'mobile.UserId=' + user.UserId + '&mobile.DeviceId=' + deviceId;
-    const url = user.Protocol + user.Host + '/app/StationMenu/' + deviceId;
-
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: dataString,
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(data => {
-        if (data.ItsOK === 'Y') {
-          $('#Name_Zone').html(data.Title);
-          $('#MENU_bodyFramework').html(data.Main);
-        }
-      })
-      .catch(err => {
-        console.error('Error al cargar menú:', err);
-      })
-      .finally(() => {
-        mainFramework.HideLoading();
-        waitingProcess.resolve();
-      });
-
-    return waitingProcess.promise();
-  }, [user]);
 
   // Carga la pantalla principal
   const loadMain = useCallback(
@@ -99,7 +63,6 @@ export const useMainScreen = () => {
 
   return {
     start,
-    loadMenu,
     loadMain,
   };
 };

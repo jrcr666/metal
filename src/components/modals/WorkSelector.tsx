@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useUser } from '../../store/userStore';
-import { useMainFramework } from '../../hooks/useMainFramework';
-import { useWorks } from '../../hooks/screens/useWorks';
-import type { Machine } from '../../types';
+import type { Machine } from '@app-types/machine.types';
+import { useWorks } from '@hooks/screens/useWorks';
+import { useMainFramework } from '@hooks/useMainFramework';
+import { useMachinesStore } from '@store/machinesStore';
+import { useUserStore } from '@store/userStore';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Modal } from './Modal';
 
-// 🔹 Tipos
 interface Work {
   WRodCutId: string;
   OrderRef: string;
@@ -14,22 +14,91 @@ interface Work {
   Status: string;
 }
 
+interface Material {
+  MaterialId: string;
+  Name: string;
+}
+
 interface WorkModalProps {
   deviceId: string;
   onClose?: () => void;
-  changeMachine: (machineId: string, data: Machine) => void;
 }
 
-export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose, changeMachine }) => {
-  const { user } = useUser();
+interface ManualRefInputProps {
+  onManualWork: (ref: string) => void;
+}
+
+const ManualRefInput = memo(({ onManualWork }: ManualRefInputProps) => {
+  const [localValue, setLocalValue] = useState('');
+
+  const handleManualWork = useCallback(() => {
+    onManualWork(localValue); // solo enviamos al padre al pulsar el botón
+  }, [localValue, onManualWork]);
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <input
+        className="form-control"
+        style={{ width: 300, height: 40 }}
+        type="text"
+        placeholder="Introduce referencia"
+        value={localValue}
+        onChange={e => setLocalValue(e.target.value)}
+      />
+      <button type="button" className="btn btn-primary" onClick={handleManualWork}>
+        Apertura Manual
+      </button>
+    </div>
+  );
+});
+
+ManualRefInput.displayName = 'ManualRefInput';
+
+const WorkTable = memo(({ works, onSelect }: { works: Work[]; onSelect: (id: string) => void }) => (
+  <div className="col-md-12">
+    <table className="table">
+      <thead className="thead-inverse">
+        <tr className="text-center">
+          <th className="col-md-3 text-center">Nº Trabajo</th>
+          <th className="col-md-2 text-center">Fecha</th>
+          <th className="col-md-4 text-center">Comentarios</th>
+          <th className="col-md-3 text-center">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {works.map(work => (
+          <tr
+            key={work.WRodCutId}
+            onClick={() => onSelect(work.WRodCutId)}
+            style={{ cursor: 'pointer' }}
+          >
+            <td style={{ lineHeight: '34px' }}>{work.OrderRef}</td>
+            <td style={{ lineHeight: '34px' }}>{work.WorkDate}</td>
+            <td style={{ lineHeight: '34px' }}>{work.Comments}</td>
+            <td style={{ lineHeight: '34px' }}>{work.Status}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+));
+WorkTable.displayName = 'WorkTable';
+
+export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose }) => {
+  const { updateMachine } = useMachinesStore();
+  const { user } = useUserStore();
   const { showLoading, hideLoading } = useMainFramework();
-  const { selectWork, manualWorkSelect } = useWorks();
+  const { selectWork, manualWorkSelect, manualWorkCreate } = useWorks();
 
   const [machine, setMachine] = useState<Machine | null>(null);
   const [works, setWorks] = useState<Work[]>([]);
-  const [manualRef, setManualRef] = useState('');
+  const [manualLines, setManualLines] = useState<number[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [manualTitle, setManualTitle] = useState<string>('');
+  const [manualRef, setManualRef] = useState<string>(''); // para almacenar referencia final
 
-  // 👉 Carga datos de la modal
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   const loadScreen = useCallback(async () => {
     try {
       showLoading();
@@ -61,102 +130,141 @@ export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose, changeM
 
   if (!machine) return null;
 
-  // 👉 Handlers
   const handleSelectWork = async (workId: string) => {
-    //console.log(`SelectWork_select('${machine.MachineId}','${workId}')`);
     const data = await selectWork(machine.MachineId, workId);
-
-    changeMachine(machine.MachineId, data);
+    updateMachine(machine.MachineId, data);
     onClose?.();
   };
 
-  const handleManualWork = async () => {
-    //console.log(`ManualWork_select('${machine.MachineId}','${manualRef || '_'}')`);
+  const handleManualWork = async (ref: string) => {
+    setManualRef(ref);
+    const data = await manualWorkSelect(machine.MachineId, ref || '_');
+    if (data) {
+      if (data.Machine) {
+        updateMachine(machine.MachineId, data.Machine);
 
-    const data = await manualWorkSelect(machine.MachineId, manualRef || '_');
-    changeMachine(machine.MachineId, data);
-    onClose?.();
+        return onClose?.();
+      }
+      setManualLines(data.Lines || []);
+      setMaterials(data.Materials || []);
+      setManualTitle(data.Title || 'Trabajo manual');
+    }
   };
+
+  const handleCreate = async () => {
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
+    const fields: Record<string, string> = {};
+    formData.forEach((value, key) => {
+      fields[key] = String(value);
+    });
+
+    const ref = manualRef || '_';
+    const data = await manualWorkCreate(machine.MachineId, ref, fields);
+    if (data) {
+      updateMachine(machine.MachineId, data);
+      onClose?.();
+    }
+  };
+
+  const showingManual = manualLines.length > 0;
 
   return (
-    <Modal onClose={() => onClose?.()}>
-      <div className="SP_MachineName">Cargar un trabajo - {machine.Name} -</div>
-      {/* Tabla */}
-      <div
-        className="GenericModalContainer"
-        id="GenericModalContainer"
-        style={{ height: 285, overflow: 'auto', marginTop: 10 }}
-      >
-        <div className="col-md-12">
-          <table className="table">
-            <thead className="thead-inverse">
-              <tr className="text-center">
-                <th className="col-md-3 text-center">Nº Trabajo</th>
-                <th className="col-md-2 text-center">Fecha</th>
-                <th className="col-md-4 text-center">Comentarios</th>
-                <th className="col-md-3 text-center">Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {works.map(work => (
-                <tr
-                  key={work.WRodCutId}
-                  onClick={() => handleSelectWork(work.WRodCutId)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <td style={{ lineHeight: '34px' }}>{work.OrderRef}</td>
-                  <td style={{ lineHeight: '34px' }}>{work.WorkDate}</td>
-                  <td style={{ lineHeight: '34px' }}>{work.Comments}</td>
-                  <td style={{ lineHeight: '34px' }}>{work.Status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {/* Barra inferior */}
-      <div
-        className="SP_BottomBar"
-        style={{
-          marginTop: 10,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <button
-          type="button"
-          className="btn btn-primary"
-          style={{ float: 'left', marginLeft: 10 }}
-          onClick={() => handleSelectWork('_')}
-        >
-          Reposo
-        </button>
+    <Modal width={600} onClose={onClose}>
+      {!showingManual ? (
+        <>
+          <div className="SP_MachineName">Cargar un trabajo - {machine.Name} -</div>
 
-        <input
-          className="form-control"
-          style={{ display: 'inline-block', width: 300, height: 40 }}
-          id="ManualWork"
-          name="ManualWork"
-          type="text"
-          placeholder="Introduce referencia"
-          value={manualRef}
-          onChange={e => setManualRef(e.target.value)}
-        />
+          <div
+            className="GenericModalContainer"
+            style={{ height: 285, overflow: 'auto', marginTop: 10 }}
+          >
+            <WorkTable works={works} onSelect={handleSelectWork} />
+          </div>
 
-        <button
-          type="button"
-          className="btn btn-primary"
-          style={{ float: 'right', marginRight: 10 }}
-          onClick={handleManualWork}
-        >
-          Apertura Manual
-        </button>
-      </div>
+          <div
+            className="SP_BottomBar"
+            style={{
+              marginTop: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <button type="button" className="btn btn-primary" onClick={() => handleSelectWork('_')}>
+              Reposo
+            </button>
+
+            {/* Input completamente aislado */}
+            <ManualRefInput onManualWork={handleManualWork} />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="SP_MachineName">{manualTitle}</div>
+
+          <div className="GenericModalContainer" style={{ height: 285, overflow: 'auto' }}>
+            <div className="col-md-12">
+              <form ref={formRef} id="ManualWorkForm">
+                <table className="table">
+                  <thead className="thead-inverse">
+                    <tr className="text-center">
+                      <th className="col-md-2 text-center">Cantidad</th>
+                      <th className="col-md-2 text-center">Extra</th>
+                      <th className="col-md-2 text-center">Longitud</th>
+                      <th className="col-md-4 text-center">Material</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {manualLines.map(line => (
+                      <tr key={line}>
+                        <td>
+                          <input
+                            className="form-control"
+                            name={`${line}Quantity`}
+                            type="number"
+                            placeholder="Cantidad"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="form-control"
+                            name={`${line}Extra`}
+                            type="number"
+                            placeholder="Extra"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="form-control"
+                            name={`${line}Dimension`}
+                            type="number"
+                            placeholder="Longitud"
+                          />
+                        </td>
+                        <td>
+                          <select name={`${line}MaterialId`} className="form-control">
+                            {materials.map(material => (
+                              <option key={material.MaterialId} value={material.MaterialId}>
+                                {material.Name}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </form>
+            </div>
+          </div>
+
+          <button type="button" className="btn btn-primary" onClick={handleCreate}>
+            Crear
+          </button>
+        </>
+      )}
     </Modal>
   );
 };
-
-// SelectWork_select('RodCut13','5bd08d68b7763') CADA FILA
-// SelectWork_select('RodCut13','_') REPOSO
-// ManualWork_select('RodCut13','_') APERTURA MANUAL

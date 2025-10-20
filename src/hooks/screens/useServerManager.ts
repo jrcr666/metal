@@ -1,16 +1,11 @@
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 import { useMainFramework } from '../useMainFramework';
 
 export const useServerManager = () => {
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { showLoading, hideLoading, lockModal, hideModal } = useMainFramework();
 
   const baseUrl = `${user.Protocol}${user.Host}`;
-
-  const updateMachineZone = (machineId: string, html: string) => {
-    const zone = document.getElementById(`MachineZone_${machineId}`);
-    if (zone) zone.innerHTML = html;
-  };
 
   const changeServer = (address: string) => {
     user.Host = address;
@@ -107,14 +102,14 @@ export const useServerManager = () => {
   };
 
   const editPackagePrint = async (machineId: string, packageId: string) => {
-    const form = document.getElementById('CloseForm') as HTMLFormElement | null;
-    if (!form) return;
+    // const form = document.getElementById('CloseForm') as HTMLFormElement | null;
+    // if (!form) return;
 
-    let dataString = `MachineId=${machineId}`;
-    Array.from(form.elements).forEach(el => {
-      const input = el as HTMLInputElement;
-      if (input.name) dataString += `&${input.name}=${encodeURIComponent(input.value)}`;
-    });
+    const dataString = `MachineId=${machineId}`;
+    // Array.from(form.elements).forEach(el => {
+    //   const input = el as HTMLInputElement;
+    //   if (input.name) dataString += `&${input.name}=${encodeURIComponent(input.value)}`;
+    // });
 
     showLoading();
     try {
@@ -127,11 +122,13 @@ export const useServerManager = () => {
       hideLoading();
 
       if (data.ItsOk === 'Y') {
-        Array.from(form.elements).forEach(el => {
-          const input = el as HTMLInputElement;
-          if (input.name) input.readOnly = true;
-        });
-        updateMachineZone(machineId, data.Html);
+        // Array.from(form.elements).forEach(el => {
+        //   const input = el as HTMLInputElement;
+        //   if (input.name) input.readOnly = true;
+        // });
+        //updateMachineZone(machineId, data.Html);
+
+        return data.Machine;
       }
       lockModal.current = false;
       hideModal();
@@ -144,14 +141,14 @@ export const useServerManager = () => {
   const editPackageDelete = async (machineId: string, packageId: string) => {
     if (!confirm('¿Esta seguro de eliminar este paquete?')) return;
 
-    const form = document.getElementById('CloseForm') as HTMLFormElement | null;
-    if (!form) return;
+    // const form = document.getElementById('CloseForm') as HTMLFormElement | null;
+    // if (!form) return;
 
-    let dataString = `MachineId=${machineId}`;
-    Array.from(form.elements).forEach(el => {
-      const input = el as HTMLInputElement;
-      if (input.name) dataString += `&${input.name}=${encodeURIComponent(input.value)}`;
-    });
+    const dataString = `MachineId=${machineId}`;
+    // Array.from(form.elements).forEach(el => {
+    //   const input = el as HTMLInputElement;
+    //   if (input.name) dataString += `&${input.name}=${encodeURIComponent(input.value)}`;
+    // });
 
     showLoading();
     try {
@@ -164,33 +161,14 @@ export const useServerManager = () => {
       hideLoading();
 
       if (data.ItsOk === 'Y') {
-        Array.from(form.elements).forEach(el => {
-          const input = el as HTMLInputElement;
-          if (input.name) input.readOnly = true;
-        });
-        updateMachineZone(machineId, data.Html);
+        // Array.from(form.elements).forEach(el => {
+        //   const input = el as HTMLInputElement;
+        //   if (input.name) input.readOnly = true;
+        // });
+        return data.Machine;
       }
       lockModal.current = false;
       hideModal();
-    } catch (err) {
-      hideLoading();
-      console.error(err);
-    }
-  };
-
-  const reloadMachine = async (machineId: string) => {
-    const dataString = `MachineId=${machineId}`;
-    showLoading();
-    try {
-      const res = await fetch(`${baseUrl}/app/ReloadMachine/${machineId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: dataString,
-      });
-      const data = await res.json();
-      hideLoading();
-
-      if (data.ItsOK === 'Y') updateMachineZone(machineId, data.Html);
     } catch (err) {
       hideLoading();
       console.error(err);
@@ -220,7 +198,6 @@ export const useServerManager = () => {
     closeOperator,
     editPackagePrint,
     editPackageDelete,
-    reloadMachine,
     activeOperator,
   };
 };

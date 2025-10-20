@@ -1,11 +1,11 @@
 import $ from 'jquery';
 import { useCallback, useRef } from 'react';
-import { useUser } from '../store/userStore';
+import { useUserStore } from '../store/userStore';
 import { useGenericModal } from './useGenericModal';
 import { useMainScreen } from './useMainScreen';
 
 export function useMainFramework() {
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { start } = useMainScreen();
   const { startModal } = useGenericModal();
 
@@ -16,7 +16,7 @@ export function useMainFramework() {
   // const thirdScroll = useRef<number>(0);
   //const modalScroll = useRef<number>(0);
   const isModal = useRef(false);
-  const isMenu = useRef(false);
+  //const isMenu = useRef(false);
   const isThird = useRef(false);
   const isLandscape = useRef(false);
   const lockModal = useRef(false);
@@ -79,31 +79,13 @@ export function useMainFramework() {
   // Menú / Modal
   // ----------------------
 
-  const showMenu = useCallback(() => {
-    if (!$('#MenuBack').is(':visible')) $('#MenuBack').show();
-  }, []);
+  // const showMenu = useCallback(() => {
+  //   if (!$('#MenuBack').is(':visible')) $('#MenuBack').show();
+  // }, []);
 
-  const hideMenu = useCallback(() => {
-    if ($('#MenuBack').is(':visible')) $('#MenuBack').hide();
-  }, []);
-
-  const startMenu = useCallback(() => {
-    isMenu.current = true;
-    const width = $('#ScrollContainer').width();
-    $('#MENU_ScrollContainer').removeAttr('class');
-    $('#MENU_Frame').hide();
-    $('#MENU_Frame').css({ left: '-300px', width: `${width}px` });
-    $('#MENU_Frame').show();
-    $('#MENU_Frame').animate({ left: '0px' }, 350);
-  }, []);
-
-  const endMenu = useCallback(() => {
-    isMenu.current = false;
-
-    $('#MENU_Frame').animate({ left: '-300px' }, 350, function () {
-      $('#MENU_Frame').hide();
-    });
-  }, []);
+  // const hideMenu = useCallback(() => {
+  //   if ($('#MenuBack').is(':visible')) $('#MenuBack').hide();
+  // }, []);
 
   const loadModal = useCallback((modal: string, path: string) => {
     isModal.current = true;
@@ -211,12 +193,12 @@ export function useMainFramework() {
   // ----------------------
 
   const closeSession = useCallback(() => {
-    endMenu();
+    //endMenu();
     const confirmed = window.confirm('¿Está seguro de cerrar la sesión?');
     if (confirmed) {
       console.log('[MainFramework] Sesión cerrada.');
     }
-  }, [endMenu]);
+  }, []);
 
   // ----------------------
   // API pública del hook
@@ -229,10 +211,8 @@ export function useMainFramework() {
     hideTopBar,
     showBottomBar,
     hideBottomBar,
-    showMenu,
-    hideMenu,
-    startMenu,
-    endMenu,
+    // showMenu,
+    // hideMenu,
     loadModal,
     showModal,
     hideModal,

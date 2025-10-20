@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 import { useMainFramework } from '../useMainFramework';
 
 export const useNR = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { showLoading, lockModal, hideLoading, hideModal } = useMainFramework();
 
   /** Utilidad para codificar formularios */

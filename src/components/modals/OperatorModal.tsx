@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 import { useMainFramework } from '../../hooks/useMainFramework';
 import { useServerManager } from '../../hooks/screens/useServerManager';
 
@@ -16,7 +16,7 @@ interface OperatorModalProps {
 }
 
 export const OperatorModal: React.FC<OperatorModalProps> = ({ stationId, onClose }) => {
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { showLoading, hideLoading } = useMainFramework();
 
   const [operators, setOperators] = useState<Operator[]>([]);

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 import { useMainFramework } from '../useMainFramework';
 
 export const useSchlatter = () => {
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { showLoading, hideLoading, lockModal, hideModal } = useMainFramework();
   const [error, setError] = useState<string | null>(null);
 

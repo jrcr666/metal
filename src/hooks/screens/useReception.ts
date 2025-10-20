@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useMainFramework } from '../../hooks/useMainFramework';
-import { useUser } from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 
 export const useReception = () => {
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { showLoading, hideLoading, lockModal } = useMainFramework();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
