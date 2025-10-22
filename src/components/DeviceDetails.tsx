@@ -1,11 +1,13 @@
 import { useMachinesStore } from '@store/machinesStore';
 import { useUserStore } from '@store/userStore';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMainFramework } from '../hooks/useMainFramework';
 import { RodCut } from '../screens/RodCut/RodCut';
+import { Schlatter } from '../screens/Schlatter/Schlatter';
 import { useAppContext } from '../store/hooks/useAppStore';
 import type { MachineBody } from '../types/machine.types';
+import AdminAccessModal from '../screens/RodCut/components/AdminAccessModal';
 
 export type Operator = {
   OperatorId: string;
@@ -31,13 +33,12 @@ type DeviceData = {
 export const DeviceDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { setUser, user } = useUserStore();
-  const { showLoading, hideLoading, loadModal } = useMainFramework();
+  const { showLoading, hideLoading } = useMainFramework();
   const { setTitle } = useAppContext();
   const { machines, setMachines } = useMachinesStore();
+  const [showGetAdminAccess, setShowGetAdminAccess] = useState(false);
 
-  const openAdminAccess = () => {
-    loadModal('GenericModal', '/app/AdminAccess');
-  };
+  const openAdminAccess = () => setShowGetAdminAccess(true);
 
   useEffect(() => {
     if (!id || !user) return;
@@ -74,17 +75,32 @@ export const DeviceDetails: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // Convertimos MachineBody a MachineData para RodCut
-  const cmp = useMemo<React.ReactNode>(() => {
-    if (machines.length === 0) return null;
-    const typeId = machines[0]?.Machine?.TypeId;
+  // 👇 Tabla de componentes
+  const components: Record<string, React.FC<{ machine: MachineBody }>> = {
+    RodCut,
+    Schlatter,
+  };
 
-    const components: Record<string, React.ReactElement> = {
-      RodCut: <RodCut stationId={id ?? ''} />,
-    };
+  return (
+    <div id="CorteBody" className="CorteBody">
+      {machines.map(machine => {
+        const typeId = machine?.Machine?.TypeId;
+        const Component = components[typeId ?? ''] ?? null;
 
-    return components[typeId ?? ''] ?? null;
-  }, [id, machines]);
+        return (
+          machine?.Machine?.MachineId && (
+            <div
+              key={machine.Machine.MachineId}
+              className="Corte_Machine noselect"
+              id={`MachineZone_${machine.Machine.MachineId}`}
+            >
+              {Component ? <Component machine={machine} /> : null}
+            </div>
+          )
+        );
+      })}
 
-  return <>{machines.length > 0 && cmp}</>;
+      {showGetAdminAccess && <AdminAccessModal onClose={() => setShowGetAdminAccess(false)} />}
+    </div>
+  );
 };

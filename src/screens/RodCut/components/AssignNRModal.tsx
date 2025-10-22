@@ -1,10 +1,10 @@
 import { useRodCut } from '@hooks/screens/useRodCut';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNR } from '../../hooks/screens/useNR';
-import { useMainFramework } from '../../hooks/useMainFramework';
-import { useUserStore } from '../../store/userStore';
-import type { Machine } from '../../types/machine.types';
-import { Modal } from './Modal';
+import { useNR } from '../../../hooks/screens/useNR';
+import { useMainFramework } from '../../../hooks/useMainFramework';
+import { useUserStore } from '../../../store/userStore';
+import type { Machine } from '../../../types/machine.types';
+import { Modal } from '../../../components/modals/Modal';
 import { useMachinesStore } from '@store/machinesStore';
 
 // 🔹 Tipos

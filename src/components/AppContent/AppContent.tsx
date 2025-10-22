@@ -12,7 +12,7 @@ import MenuIcon from '../../assets/img/Menu.png';
 import { useAppContext } from '../../store/hooks/useAppStore';
 import { DeviceDetails } from '../DeviceDetails';
 import { HeaderContent } from '../HeaderContent';
-import { OperatorModal } from '../modals/OperatorModal';
+import { OperatorModal } from '../../screens/RodCut/components/OperatorModal';
 import './css/index.css';
 import './css/MainScreen.css';
 import './css/Menu.css';

@@ -125,12 +125,13 @@ export const useWorks = () => {
     typeId: string,
     id: string,
     ref: string,
+    inputValue: string = '',
     nrChange = false
   ) => {
     if (nrChange) alert('Verificar cambio de NR');
 
     if (typeId === 'MA') {
-      id = (document.getElementById('ManualPallet') as HTMLInputElement)?.value || '';
+      id = inputValue;
       ref = id;
       if (!id) {
         typeId = '_';
@@ -148,11 +149,11 @@ export const useWorks = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
-      updateMachineZone(machineId, data);
+
       lockModal.current = false;
-      hideModal();
+      return data;
     } catch (err) {
       hideLoading();
       console.error(err);
@@ -175,11 +176,13 @@ export const useWorks = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: dataString,
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
-      updateMachineZone(machineId, data);
+
       lockModal.current = false;
       hideModal();
+
+      return data;
     } catch (err) {
       hideLoading();
       console.error(err);

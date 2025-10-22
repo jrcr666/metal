@@ -50,7 +50,7 @@ export const useSchlatter = () => {
       const data = await res.json();
       hideLoading();
       if (data.ItsOk === 'Y') {
-        updateMachineZone(machineId, data.Html);
+        return data.Machine;
       }
     } catch (err) {
       hideLoading();
@@ -64,18 +64,10 @@ export const useSchlatter = () => {
     hideModal();
   };
 
-  const closePaletPrint = async (machineId: string) => {
-    const form = document.getElementById('CloseForm') as HTMLFormElement | null;
-    if (!form) return;
-
-    let dataString = `MachineId=${machineId}`;
-    Array.from(form.elements).forEach(el => {
-      const input = el as HTMLInputElement;
-      if (input.name) dataString += `&${input.name}=${encodeURIComponent(input.value)}`;
-    });
+  const closePaletPrint = async (machineId: string, quantity: string) => {
+    const dataString = `MachineId=${machineId}&Quantity=${quantity}`;
 
     try {
-      document.getElementById('PrintPaletBtnClose')?.setAttribute('hidden', 'true');
       lockModal.current = false;
       showLoading();
       const res = await fetch(`${baseUrl}/app/ClosePalet/Print/${machineId}/Y`, {
@@ -86,28 +78,12 @@ export const useSchlatter = () => {
       const data = await res.json();
       hideLoading();
 
-      if (data.ItsOk === 'Y') {
-        updateMachineZone(machineId, data.Html);
-        Array.from(form.elements).forEach(el => {
-          const input = el as HTMLInputElement;
-          if (input.id) input.readOnly = true;
-        });
-        document.getElementById('PrintPaletBtnClose')?.removeAttribute('hidden');
-        document.getElementById('ClosePaletBtnClose')?.removeAttribute('hidden');
-      }
+      if (data.ItsOk === 'Y') return data;
     } catch (err) {
       hideLoading();
       setError('Error al cerrar e imprimir palet');
       console.error(err);
-    } finally {
-      // siempre mostrar el botón tras finalizar (como .always en jQuery)
-      document.getElementById('PrintPaletBtnClose')?.removeAttribute('hidden');
     }
-  };
-
-  const closePaletClose = () => {
-    lockModal.current = false;
-    hideModal();
   };
 
   const closeLineClose = () => {
@@ -122,9 +98,10 @@ export const useSchlatter = () => {
       const res = await fetch(`${baseUrl}/app/VerifyPalet/${machineId}/${outContainer}`, {
         method: 'GET',
       });
-      const data = await res.text();
+      const data = await res.json();
       hideLoading();
-      updateMachineZone(machineId, data);
+
+      return data;
     } catch (err) {
       hideLoading();
       setError('Error al verificar palet');
@@ -138,7 +115,6 @@ export const useSchlatter = () => {
     newPaletNoPrint,
     newPaletClose,
     closePaletPrint,
-    closePaletClose,
     closeLineClose,
     verifyPalet,
   };

@@ -1,9 +1,9 @@
 import { useMachinesStore } from '@store/machinesStore';
 import React, { useEffect, useState } from 'react';
-import { useRodCut } from '../../hooks/screens/useRodCut';
-import { useMainFramework } from '../../hooks/useMainFramework';
-import { useUserStore } from '../../store/userStore';
-import { Modal } from './Modal';
+import { useRodCut } from '../../../hooks/screens/useRodCut';
+import { useMainFramework } from '../../../hooks/useMainFramework';
+import { useUserStore } from '../../../store/userStore';
+import { Modal } from '../../../components/modals/Modal';
 
 // Tipos de la línea y materiales
 interface Material {

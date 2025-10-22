@@ -10,7 +10,7 @@
 .Schlatter_MachineLeft {
   position: absolute;
   top: 0px;
-  width: 390px;
+  width: 380px;
   left: 0px;
   bottom: 0px;
   border-right: solid 1px #aaa;
@@ -128,7 +128,7 @@
 
 .Schlatter_MachineHeader {
   position: absolute;
-  left: 390px;
+  left: 380px;
   top: 0px;
   right: 0px;
   height: 45px;

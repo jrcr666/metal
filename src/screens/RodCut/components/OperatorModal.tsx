@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useUserStore } from '../../store/userStore';
-import { useMainFramework } from '../../hooks/useMainFramework';
-import { useServerManager } from '../../hooks/screens/useServerManager';
+import { useUserStore } from '../../../store/userStore';
+import { useMainFramework } from '../../../hooks/useMainFramework';
+import { useServerManager } from '../../../hooks/screens/useServerManager';
 
 interface Operator {
   OperatorId: string;

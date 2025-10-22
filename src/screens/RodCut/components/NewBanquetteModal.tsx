@@ -1,7 +1,7 @@
 import { useRodCut } from '@hooks/screens/useRodCut';
 import { useMachinesStore } from '@store/machinesStore';
 import React, { useState } from 'react';
-import { Modal } from './Modal';
+import { Modal } from '../../../components/modals/Modal';
 
 interface NewBanquetteModalProps {
   machineId: string;

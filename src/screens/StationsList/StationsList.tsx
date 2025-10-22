@@ -44,8 +44,6 @@ export const StationsList: React.FC = () => {
   };
 
   const handleStationClick = (station: Station) => {
-    console.log('handleStationClick', station);
-
     navigate(`/device/${station.StationId}`, { replace: true });
   };
 

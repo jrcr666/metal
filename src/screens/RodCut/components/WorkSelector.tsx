@@ -3,11 +3,12 @@ import { useWorks } from '@hooks/screens/useWorks';
 import { useMainFramework } from '@hooks/useMainFramework';
 import { useMachinesStore } from '@store/machinesStore';
 import { useUserStore } from '@store/userStore';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Modal } from './Modal';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Modal } from '@components/modals/Modal';
 
 interface Work {
-  WRodCutId: string;
+  WRodCutId?: string;
+  WSchlatterId?: string;
   OrderRef: string;
   WorkDate: string;
   Comments: string;
@@ -31,8 +32,13 @@ interface ManualRefInputProps {
 const ManualRefInput = memo(({ onManualWork }: ManualRefInputProps) => {
   const [localValue, setLocalValue] = useState('');
 
+  const handleChange = (value: string) => {
+    const formatted = value.replace(/\./g, '-').replace(/,/g, '_').replace(/ /g, '').toUpperCase();
+    setLocalValue(formatted);
+  };
+
   const handleManualWork = useCallback(() => {
-    onManualWork(localValue); // solo enviamos al padre al pulsar el botón
+    onManualWork(localValue);
   }, [localValue, onManualWork]);
 
   return (
@@ -43,7 +49,7 @@ const ManualRefInput = memo(({ onManualWork }: ManualRefInputProps) => {
         type="text"
         placeholder="Introduce referencia"
         value={localValue}
-        onChange={e => setLocalValue(e.target.value)}
+        onChange={e => handleChange(e.target.value)}
       />
       <button type="button" className="btn btn-primary" onClick={handleManualWork}>
         Apertura Manual
@@ -51,37 +57,46 @@ const ManualRefInput = memo(({ onManualWork }: ManualRefInputProps) => {
     </div>
   );
 });
-
 ManualRefInput.displayName = 'ManualRefInput';
 
-const WorkTable = memo(({ works, onSelect }: { works: Work[]; onSelect: (id: string) => void }) => (
-  <div className="col-md-12">
-    <table className="table">
-      <thead className="thead-inverse">
-        <tr className="text-center">
-          <th className="col-md-3 text-center">Nº Trabajo</th>
-          <th className="col-md-2 text-center">Fecha</th>
-          <th className="col-md-4 text-center">Comentarios</th>
-          <th className="col-md-3 text-center">Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        {works.map(work => (
-          <tr
-            key={work.WRodCutId}
-            onClick={() => onSelect(work.WRodCutId)}
-            style={{ cursor: 'pointer' }}
-          >
-            <td style={{ lineHeight: '34px' }}>{work.OrderRef}</td>
-            <td style={{ lineHeight: '34px' }}>{work.WorkDate}</td>
-            <td style={{ lineHeight: '34px' }}>{work.Comments}</td>
-            <td style={{ lineHeight: '34px' }}>{work.Status}</td>
+const WorkTable = memo(
+  ({
+    works,
+    onSelect,
+    idKey,
+  }: {
+    works: Work[];
+    onSelect: (id: string) => void;
+    idKey: 'WRodCutId' | 'WSchlatterId';
+  }) => (
+    <div className="col-md-12">
+      <table className="table">
+        <thead className="thead-inverse">
+          <tr className="text-center">
+            <th className="col-md-3 text-center">Nº Trabajo</th>
+            <th className="col-md-2 text-center">Fecha</th>
+            <th className="col-md-4 text-center">Comentarios</th>
+            <th className="col-md-3 text-center">Estado</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-));
+        </thead>
+        <tbody>
+          {works.map(work => {
+            const id = work[idKey];
+            if (!id) return null;
+            return (
+              <tr key={id} onClick={() => onSelect(id)} style={{ cursor: 'pointer' }}>
+                <td style={{ lineHeight: '34px' }}>{work.OrderRef}</td>
+                <td style={{ lineHeight: '34px' }}>{work.WorkDate}</td>
+                <td style={{ lineHeight: '34px' }}>{work.Comments}</td>
+                <td style={{ lineHeight: '34px' }}>{work.Status}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+);
 WorkTable.displayName = 'WorkTable';
 
 export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose }) => {
@@ -95,9 +110,19 @@ export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose }) => {
   const [manualLines, setManualLines] = useState<number[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
   const [manualTitle, setManualTitle] = useState<string>('');
-  const [manualRef, setManualRef] = useState<string>(''); // para almacenar referencia final
+  const [manualRef, setManualRef] = useState<string>('');
 
   const formRef = useRef<HTMLFormElement | null>(null);
+
+  const idKey = useMemo<'WRodCutId' | 'WSchlatterId'>(() => {
+    if (
+      machine?.TypeId?.toLowerCase().includes('schlatter') ||
+      machine?.Name?.includes('Schlatter')
+    ) {
+      return 'WSchlatterId';
+    }
+    return 'WRodCutId';
+  }, [machine]);
 
   const loadScreen = useCallback(async () => {
     try {
@@ -142,7 +167,6 @@ export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose }) => {
     if (data) {
       if (data.Machine) {
         updateMachine(machine.MachineId, data.Machine);
-
         return onClose?.();
       }
       setManualLines(data.Lines || []);
@@ -180,7 +204,7 @@ export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose }) => {
             className="GenericModalContainer"
             style={{ height: 285, overflow: 'auto', marginTop: 10 }}
           >
-            <WorkTable works={works} onSelect={handleSelectWork} />
+            <WorkTable works={works} onSelect={handleSelectWork} idKey={idKey} />
           </div>
 
           <div
@@ -196,7 +220,6 @@ export const WorkModal: React.FC<WorkModalProps> = ({ deviceId, onClose }) => {
               Reposo
             </button>
 
-            {/* Input completamente aislado */}
             <ManualRefInput onManualWork={handleManualWork} />
           </div>
         </>

@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../store/userStore';
 import { useMainFramework } from '../useMainFramework';
 
 export const useServerManager = () => {
   const { user } = useUserStore();
+  const navigate = useNavigate();
   const { showLoading, hideLoading, lockModal, hideModal } = useMainFramework();
 
   const baseUrl = `${user.Protocol}${user.Host}`;
@@ -29,9 +31,7 @@ export const useServerManager = () => {
       hideModal();
 
       if (data.ItsOK === 'Y') {
-        window.location.href = '/app/StationsList';
-      } else {
-        window.location.href = `/app/Station/${user.DeviceId}`;
+        navigate('/', { replace: true });
       }
     } catch (err) {
       hideLoading();

@@ -1,25 +1,37 @@
+import { useMachinesStore } from '@store/machinesStore';
 import { useEffect, useRef, useState } from 'react';
 import MenuIcon from '../assets/img/Menu.png';
-import { PackageModal } from './modals/PackageModal';
+import { PackageModal } from '../screens/RodCut/components/PackageModal';
 
-interface PackageRodCut {
+interface BasePackage {
   MachineId: string;
-  RCPackageId: string;
   Order: { OrderRef: string };
   Quantity: number;
+  Time: string;
+}
+
+interface RodCutPackage extends BasePackage {
+  RCPackageId: string;
   Material: { Name: string };
   Weight: number;
-  Location: string;
-  Time: string;
   BanquetteRef: string;
 }
 
+interface SchlatterPackage extends BasePackage {
+  SCPackageId: string;
+  ModelId: string;
+  Location: string;
+}
+
+type PackageType = RodCutPackage | SchlatterPackage;
+
 interface SidebarMenuProps {
+  type: 'RodCut' | 'Schlatter';
+  title: string;
   isOpen: boolean;
   onClose: () => void;
   onStartFramework: () => void;
-  packages: PackageRodCut[];
-  title: string;
+  packages: PackageType[];
 }
 
 export const SidebarMenu: React.FC<SidebarMenuProps> = ({
@@ -29,11 +41,15 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
   onStartFramework,
   packages = [],
 }) => {
+  const { machines } = useMachinesStore();
+
+  const type = machines?.[0]?.Machine?.TypeId || '';
+
   const panelRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(isOpen);
-
-  // Modal local
-  const [selectedPackage, setSelectedPackage] = useState<PackageRodCut | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<RodCutPackage | SchlatterPackage | null>(
+    null
+  );
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
@@ -45,9 +61,18 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
     }
   }, [isOpen]);
 
-  const handlePackageClick = (pkg: PackageRodCut) => {
-    setSelectedPackage(pkg);
-    setModalOpen(true);
+  const handlePackageClick = (pkg: PackageType) => {
+    if (type === 'RodCut') {
+      onClose();
+      setSelectedPackage(pkg as RodCutPackage);
+      setModalOpen(true);
+    } else if (type === 'Schlatter') {
+      //const p = pkg as SchlatterPackage;
+      //loadModal('GenericModal', `/app/EditPackage/${p.MachineId}/${p.SCPackageId}`);
+      setSelectedPackage(pkg as SchlatterPackage);
+      setModalOpen(true);
+      onClose();
+    }
   };
 
   const handleCloseModal = () => {
@@ -57,7 +82,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
 
   return (
     <>
-      {/* Overlay + Sidebar */}
+      {/* Overlay */}
       <div
         style={{
           position: 'fixed',
@@ -86,9 +111,8 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
             boxShadow: '2px 0 8px rgba(0,0,0,0.3)',
             transition: 'left 0.35s ease',
             zIndex: 9999,
-            background: 'white',
           }}
-          onClick={e => e.stopPropagation()} // evita cerrar al hacer clic dentro
+          onClick={e => e.stopPropagation()}
         >
           <div className="MENU_TopBar" id="MENU_TopBar" onClick={onClose}>
             <div className="Menu_Title" id="Name_Zone" onClick={onStartFramework}>
@@ -101,18 +125,32 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
             <div className="MENU_Scroll" id="MENU_bodyFramework">
               {packages.map(pkg => (
                 <div
-                  key={pkg.RCPackageId}
+                  key={
+                    type === 'RodCut'
+                      ? (pkg as RodCutPackage).RCPackageId
+                      : (pkg as SchlatterPackage).SCPackageId
+                  }
                   className="MenuItem BanquetteTag"
-                  onClick={() => {
-                    onClose();
-                    handlePackageClick(pkg);
-                  }}
+                  onClick={() => handlePackageClick(pkg)}
                 >
                   <div className="OrderRef">{pkg.Order.OrderRef}</div>
                   <div className="Quantity">{pkg.Quantity}</div>
-                  <div className="Material">{pkg.Material.Name}</div>
-                  <div className="Weight">{pkg.Weight} Kg</div>
-                  <div className="Banquette">{pkg.BanquetteRef}</div>
+
+                  {/* Campos específicos según tipo */}
+                  {type === 'RodCut' ? (
+                    <>
+                      <div className="Material">{(pkg as RodCutPackage).Material.Name}</div>
+                      <div className="Weight">{(pkg as RodCutPackage).Weight} Kg</div>
+                      <div className="Banquette">{(pkg as RodCutPackage).BanquetteRef}</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="Material">{(pkg as SchlatterPackage).ModelId}</div>
+                      <div className="Weight"></div>
+                      <div className="Banquette">{(pkg as SchlatterPackage).Location}</div>
+                    </>
+                  )}
+
                   <div className="Time">{pkg.Time}</div>
                 </div>
               ))}
@@ -121,8 +159,9 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
         </div>
       </div>
 
+      {/* Modal solo para RodCut */}
       {selectedPackage && isModalOpen && (
-        <PackageModal pkg={selectedPackage} onClose={handleCloseModal} />
+        <PackageModal type={type} pkg={selectedPackage} onClose={handleCloseModal} />
       )}
     </>
   );

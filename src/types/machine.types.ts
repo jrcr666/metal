@@ -12,11 +12,14 @@ type Line = {
   Material: Material;
   MaterialId: string;
   Weight: number;
+  SchlatterLineId: string;
+  ModelRef: string;
+  Verified_NR?: string | null;
 };
 
 export type Machine = {
   MachineId: string;
-  TypeId: string; // Tipo de máquina
+  TypeId: string;
   Name: string;
   NrId: string;
   MaterialId: string;
@@ -24,12 +27,28 @@ export type Machine = {
   StatusId: string;
   LineId: string;
   Lines: Line[];
-  Order?: { OrderRef: string };
+  actualPaletVerified?: string | null;
+  Order: {
+    OrderRef: string;
+  };
+};
+
+export type InContainer = {
+  Label: string;
+  Name: string;
+  NR: string;
+  No: string;
+  WorkInId: string;
+  Type: string;
+  WorkId: string;
+  WLineId: string;
 };
 
 export type MachineBody = {
   Machine: Machine;
   NrAlert: boolean;
   ClientMaterial: 'Y' | 'N';
+  WithWorksIn: boolean;
   Finished: boolean;
+  InContainers: Array<InContainer>;
 };

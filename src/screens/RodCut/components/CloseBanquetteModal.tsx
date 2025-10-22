@@ -18,7 +18,6 @@ export const CloseBanquetteModal: React.FC<CloseBanquetteModalProps> = ({ machin
   const [disableInputs, setDisableInputs] = useState(false);
 
   const handlePrint = async () => {
-    console.log(`CloseBanquette_Print('${machineId}')`);
     const data = await closeBanquettePrint(machineId, quantity, weight);
 
     updateMachine(machineId, data);
@@ -27,7 +26,6 @@ export const CloseBanquetteModal: React.FC<CloseBanquetteModalProps> = ({ machin
   };
 
   const handleCloseBanquette = async () => {
-    console.log(`CloseBanquette_Close('${machineId}')`);
     await closeBanquetteClose();
     onClose?.();
   };

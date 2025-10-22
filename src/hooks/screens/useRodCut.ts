@@ -14,7 +14,7 @@ interface SaveLineParams {
 
 export const useRodCut = () => {
   const { user } = useUserStore();
-  const { showLoading, hideLoading, lockModal, hideModal } = useMainFramework();
+  const { showLoading, hideLoading, lockModal } = useMainFramework();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -126,86 +126,6 @@ export const useRodCut = () => {
     }
   };
 
-  const resumeMachine = async (machineId: string) => {
-    const dataString = `MachineId=${machineId}`;
-    try {
-      showLoading();
-      const res = await fetch(`${baseUrl}/app/ResumeMachine/${machineId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: dataString,
-      });
-      const data = await res.json();
-      hideLoading();
-      // updateMachineZone(machineId, data);
-      lockModal.current = false;
-      hideModal();
-
-      return data;
-    } catch (err) {
-      hideLoading();
-      console.error('Error al reanudar máquina:', err);
-    }
-  };
-
-  const pauseMachine = async (machineId: string) => {
-    const dataString = `MachineId=${machineId}`;
-    try {
-      showLoading();
-      const res = await fetch(`${baseUrl}/app/PauseMachine/${machineId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: dataString,
-      });
-      const data = await res.json();
-
-      hideLoading();
-      //updateMachineZone(machineId, data);
-      lockModal.current = false;
-      hideModal();
-
-      return data;
-    } catch (err) {
-      hideLoading();
-      console.error('Error al pausar máquina:', err);
-    }
-  };
-
-  const closeLinePrint = async (machineId: string, quantity: string, weight: string) => {
-    const form = document.getElementById('CloseForm') as HTMLFormElement | null;
-    if (!form) return;
-
-    const dataString = `MachineId=${machineId}&Quantity=${quantity}&Weight=${weight}`;
-
-    console.log(dataString);
-
-    try {
-      lockModal.current = false;
-      showLoading();
-      const res = await fetch(`${baseUrl}/app/LinePrint/${machineId}/N`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: dataString,
-      });
-      const data = await res.json();
-      hideLoading();
-
-      if (data.ItsOk === 'Y') {
-        // document.getElementById('BanquetteBtnClose')?.removeAttribute('hidden');
-        //document.getElementById('PalletBtnClose')?.removeAttribute('hidden'); // NO EN Rod CUT
-
-        return data.Machine;
-      }
-    } catch (err) {
-      hideLoading();
-      console.error('Error al imprimir línea:', err);
-    }
-  };
-
-  const closeLineClose = () => {
-    lockModal.current = false;
-  };
-
   const closeBanquettePrint = async (machineId: string, quantity: string, weight: string) => {
     const dataString = `MachineId=${machineId}&Quantity=${quantity}&Weight=${weight}`;
 
@@ -242,10 +162,6 @@ export const useRodCut = () => {
     assignOutput,
     newBanquette,
     saveLine,
-    resumeMachine,
-    pauseMachine,
-    closeLinePrint,
-    closeLineClose,
     closeBanquettePrint,
     closeBanquetteClose,
   };
